@@ -1,7 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@font-face {
+  font-family: 'GeistSans';
+  src: url(../node_modules/geist/dist//fonts/geist-sans/Geist-Regular.woff2) format('woff2');
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -58,3 +61,7 @@
     --chart-5: 340 75% 55%;
   }
 }
+
+  body {
+    font-family: 'GeistSans', sans-serif;
+  }
