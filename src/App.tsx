@@ -1,11 +1,15 @@
-import { Button } from '@/components/ui/button'
 import { ThemeProvider } from './components/theme-provider'
+import Dashboard from './components/dashboard'
+import './index.css'
+import { RecoilRoot } from 'recoil'
 
 function App() {
 
   return (
     <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-      <Button>Hi There</Button>
+      <RecoilRoot>
+        <Dashboard />
+      </RecoilRoot>
     </ThemeProvider>
   )
 }
