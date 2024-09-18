@@ -1,5 +1,3 @@
-"use client"
-
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts"
 
 import {
@@ -14,12 +12,12 @@ import {
   ChartContainer,
 } from "@/components/ui/chart"
 
-  const chartConfig = {
-    attendees: {
-      label: "Attendees",
-      color: "hsl(var(--primary))", 
-    },
-  } satisfies ChartConfig;
+const chartConfig = {
+  attendees: {
+    label: "Attendees",
+    color: "hsl(var(--primary))",
+  },
+} satisfies ChartConfig;
 
 const chartData = [
   { month: "January", attendees: 186 },
@@ -46,9 +44,9 @@ export function Overview() {
       <CardContent className="pl-0">
         <ChartContainer config={chartConfig}>
           <BarChart data={chartData} className=" min-h-[500] w-full">
-            <CartesianGrid 
+            <CartesianGrid
               stroke="hsl(var(--border))"
-              vertical={false} 
+              vertical={false}
             />
             <XAxis
               dataKey="month"
@@ -56,24 +54,24 @@ export function Overview() {
               tickMargin={10}
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 3)}
-              tick={{ fill: "hsl(var(--foreground))" }} 
+              tick={{ fill: "hsl(var(--foreground))" }}
             />
             <YAxis
-              tick={{ fill: "hsl(var(--foreground))" }} 
+              tick={{ fill: "hsl(var(--foreground))" }}
               axisLine={false}
               tickLine={false}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--popover))", 
-                color: "hsl(var(--popover-foreground))", 
+                backgroundColor: "hsl(var(--popover))",
+                color: "hsl(var(--popover-foreground))",
               }}
-              cursor={{ fill: "hsl(var(--muted))" }} 
+              cursor={{ fill: "hsl(var(--muted))" }}
             />
-            <Bar 
-              dataKey="attendees" 
+            <Bar
+              dataKey="attendees"
               fill="hsl(var(--primary))"
-              radius={8} 
+              radius={8}
             />
           </BarChart>
         </ChartContainer>

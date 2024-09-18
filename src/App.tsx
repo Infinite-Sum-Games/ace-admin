@@ -1,5 +1,5 @@
-import { ThemeProvider } from './components/theme-provider'
-import Dashboard from './components/dashboard'
+import { ThemeProvider } from '@/components/theme-provider'
+import Dashboard from '@/pages/dashboard/Dashboard'
 import './index.css'
 import { RecoilRoot } from 'recoil'
 
