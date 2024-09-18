@@ -7,8 +7,10 @@ const Layout: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // TODO: Run checks on the secureLocalStorage and then navigate accordingly
     const token = secureLocalStorage.getItem("token");
     if (!token) navigate("/login")
+    else navigate("/dashboard")
   }, []);
   return (
     <>
