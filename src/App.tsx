@@ -1,14 +1,38 @@
 import { ThemeProvider } from '@/components/theme-provider'
-import Dashboard from '@/pages/dashboard/Dashboard'
 import './index.css'
 import { RecoilRoot } from 'recoil'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import DashboardPage from './pages/dashboard/DashboardPage'
+import Layout from '@/pages/Layout'
+import LoginPage from './pages/login/LoginPage'
+import EventsPage from './pages/events/EventsPage'
+import SuggestionsPage from './pages/suggestions/SuggestionsPage'
+import Error404 from './pages/errors/Error404'
+import BlogsPage from './pages/blogs/BlogsPage'
+import AdminPage from './pages/admin/AdminPage'
+import CampaignsPage from './pages/campaigns/CampaignsPage'
 
 function App() {
 
   return (
     <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
       <RecoilRoot>
-        <Dashboard />
+
+        { /* Routing logic */}
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/campaigns" element={<CampaignsPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/blogs" element={<BlogsPage />} />
+            <Route path="/suggestions" element={<SuggestionsPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="*" element={<Error404 />} />
+          </Routes>
+        </BrowserRouter>
       </RecoilRoot>
     </ThemeProvider>
   )
