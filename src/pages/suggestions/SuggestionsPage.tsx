@@ -1,9 +1,9 @@
-import React from "react";
+import Sidebar from "@/components/Sidebar";
 
-const SuggestionsPage: React.FC = () => {
+const SuggestionsPage = () => {
   return (
     <>
-      SuggestionsPage
+      <Sidebar />
     </>
   );
 }
