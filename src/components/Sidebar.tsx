@@ -14,6 +14,7 @@ import { Button } from "./ui/button";
 import secureLocalStorage from "react-secure-storage";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { ModeToggleButton } from "./ModeToggle";
 
 type SidebarItem = {
   icon: JSX.Element,
@@ -70,7 +71,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="w-fit h-screen border-2 border-black bg-[hsl(var(--background))]">
+    <div className="w-fit h-screen bg-[hsl(var(--background))]">
       <div className="flex flex-col justify-between p-2 h-full">
         {/* Navigation Links */}
         <div>
@@ -94,16 +95,16 @@ const Sidebar = () => {
           {/* TODO: Setup Light-Dark model toggle */}
 
           {/* <TooltipProvider> */}
-          {/*   <Tooltip> */}
-          {/*     <TooltipTrigger> */}
-          {/*       <ModeToggle /> */}
-          {/*     </TooltipTrigger> */}
-          {/*     <TooltipContent side="right">Toggle Theme</TooltipContent> */}
-          {/*   </Tooltip> */}
           {/* Profile */}
 
           {/* TODO: Profile pictures can be an add-on for later versions */}
           <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <ModeToggleButton />
+              </TooltipTrigger>
+              <TooltipContent side="right">Toggle Theme</TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger>
                 <Avatar>
