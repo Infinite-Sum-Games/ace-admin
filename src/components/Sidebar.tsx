@@ -12,8 +12,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import secureLocalStorage from "react-secure-storage";
-import { ModeToggle } from "./mode-toggle";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type SidebarItem = {
@@ -58,6 +57,11 @@ const items: SidebarItem[] = [
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  // TODO: Capture firstName and lastName after backend integration is done.
+  // It can be extracted either from secureLocalStorage or using recoil/atoms
+  // Adding placeholders for now
+  const [firstName, setFirstName] = useState<string>("Ritesh");
+  const [lastName, setLastName] = useState<string>("Koushik");
 
   const logoutHandler = () => {
     // TODO: Add confirmation screen before logging out
@@ -65,50 +69,65 @@ const Sidebar = () => {
     navigate("/login")
   }
 
-  // TODO: Capture firstName and lastName from secureLocalStorage after backend
-  // connectivity is done using a useEffect
-  const [firstName, setFirstName] = useState<string>("Ritesh");
-  const [lastName, setLastName] = useState<string>("Koushik");
-
   return (
-    <div className="w-[] h-screen border-r bg-background">
+    <div className="w-[] h-screen border-r bg-[var(hsl(--background))]">
       <div className="flex flex-col items-center space-between p-2">
         {/* Navigation Links */}
         <div>
-          <></>
+          {items.map((item: SidebarItem, index: number) => (
+            <div key={index}>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Button onClick={() => navigate(item.link)} size="icon" variant="outline">
+                      {item.icon}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">{item.title}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          ))}
         </div>
 
-        {/* Auxiliary Links */}
         <div className="flex flex-col items-center gap-y-2">
           {/* Theme */}
-          <Tooltip>
-            <TooltipTrigger>
-              <ModeToggle />
-            </TooltipTrigger>
-            <TooltipContent side="right">Toggle Theme</TooltipContent>
-          </Tooltip>
+
+          {/* TODO: Setup Light-Dark model toggle */}
+
+          {/* <TooltipProvider> */}
+          {/*   <Tooltip> */}
+          {/*     <TooltipTrigger> */}
+          {/*       <ModeToggle /> */}
+          {/*     </TooltipTrigger> */}
+          {/*     <TooltipContent side="right">Toggle Theme</TooltipContent> */}
+          {/*   </Tooltip> */}
           {/* Profile */}
-          <Tooltip>
-            <TooltipTrigger>
-              <Avatar>
-                <AvatarImage src="unreachable-link" alt="pfp" />
-                <AvatarFallback>{firstName.slice(0, 1) + lastName.slice(0, 1)}</AvatarFallback>
-              </Avatar>
-            </TooltipTrigger>
-            <TooltipContent side="right">Profile</TooltipContent>
-          </Tooltip>
-          {/* Logout */}
-          <Tooltip>
-            <TooltipTrigger>
-              <Button onClick={logoutHandler}>
-                <LogOut />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right">Logout</TooltipContent>
-          </Tooltip>
+
+          {/* TODO: Profile pictures can be an add-on for later versions */}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Avatar>
+                  <AvatarImage src="unreachable-link" alt="pfp" />
+                  <AvatarFallback className="bg-white text-black">{firstName.slice(0, 1) + lastName.slice(0, 1)}</AvatarFallback>
+                </Avatar>
+              </TooltipTrigger>
+              <TooltipContent side="right">Profile</TooltipContent>
+            </Tooltip>
+            {/* Logout */}
+            <Tooltip>
+              <TooltipTrigger>
+                <Button onClick={logoutHandler} size="icon" variant="outline" >
+                  <LogOut className="text-white" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Logout</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
