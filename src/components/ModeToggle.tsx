@@ -8,9 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/components/theme-provider"
+import { useState } from "react";
 
 export function ModeToggle() {
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -36,3 +37,32 @@ export function ModeToggle() {
   )
 }
 
+export function ModeToggleButton() {
+  // This component assumes that the default mode is dark
+  const { setTheme } = useTheme();
+  const [dark, setDark] = useState<boolean>(true);
+
+  const toggleTheme = (toggle: boolean) => {
+    if (toggle) {
+      setDark(false);
+      setTheme("light");
+    } else {
+      setDark(true);
+      setTheme("dark");
+    }
+  }
+
+  return (
+    <>
+      {dark ?
+        <Button onClick={() => toggleTheme(true)} size="icon" variant="outline" className="border-0">
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 dark:text-white" />
+        </Button>
+        :
+        <Button onClick={() => toggleTheme(false)} size="icon" variant="outline" className="border-0">
+          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+        </Button>
+      }
+    </>
+  )
+}

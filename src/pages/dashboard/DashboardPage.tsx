@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 import { filterState } from "@/atoms/atoms";
 import ToggleGroup from "@/components/toggle-group";
 import { User, CalendarCheck, Users, Flag, ArrowUpRight, ArrowDownRight } from "lucide-react";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ModeToggle } from "@/components/ModeToggle";
 import EventsTable from "@/components/RecentEventsTable";
 import { Separator } from "@/components/ui/separator";
 import { Overview } from "@/components/DashboardBarChart";
