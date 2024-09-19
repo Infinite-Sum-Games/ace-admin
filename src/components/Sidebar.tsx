@@ -1,11 +1,11 @@
 import {
-  CircleGauge,
+  House,
+  LandPlot,
   LogOut,
-  MailWarning,
-  Newspaper,
-  Rss,
-  ShieldCheck,
-  TicketCheck
+  MessageCircleWarning,
+  NotebookPen,
+  TicketCheck,
+  UserCog
 } from "lucide-react";
 
 import { useState } from "react";
@@ -23,7 +23,7 @@ type SidebarItem = {
 
 const items: SidebarItem[] = [
   {
-    icon: <CircleGauge className="mx-1 text-white" />,
+    icon: <House className="mx-1 text-white" />,
     title: "Dashboard",
     link: "/dashboard"
   },
@@ -33,22 +33,22 @@ const items: SidebarItem[] = [
     link: "/events"
   },
   {
-    icon: <Rss className="mx-1 text-white" />,
+    icon: <LandPlot className="mx-1 text-white" />,
     title: "Campaigns",
     link: "/campaigns"
   },
   {
-    icon: <Newspaper className="mx-1 text-white" />,
+    icon: <NotebookPen className="mx-1 text-white" />,
     title: "Blogs",
     link: "/blogs"
   },
   {
-    icon: <MailWarning className="mx-1 text-white" />,
+    icon: <MessageCircleWarning className="mx-1 text-white" />,
     title: "Suggestions",
     link: "/suggestions"
   },
   {
-    icon: <ShieldCheck className="mx-1 text-white" />,
+    icon: <UserCog className="mx-1 text-white" />,
     title: "Admin",
     link: "/admin"
   }
@@ -70,29 +70,27 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="w-[] h-screen border-r bg-[var(hsl(--background))]">
-      <div className="flex flex-col items-center space-between p-2">
+    <div className="w-fit h-screen border-2 border-black bg-[hsl(var(--background))]">
+      <div className="flex flex-col justify-between p-2 h-full">
         {/* Navigation Links */}
         <div>
           {items.map((item: SidebarItem, index: number) => (
-            <div key={index}>
+            <div key={index} className="my-4 mx-1">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <Button onClick={() => navigate(item.link)} size="icon" variant="outline">
+                    <Button onClick={() => navigate(item.link)} size="icon" variant="outline" className="border-0">
                       {item.icon}
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="right">{item.title}</TooltipContent>
+                  <TooltipContent side="right" className="ml-1 border-2">{item.title}</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
           ))}
         </div>
 
-        <div className="flex flex-col items-center gap-y-2">
-          {/* Theme */}
-
+        <div className="flex flex-col items-center gap-y-4">
           {/* TODO: Setup Light-Dark model toggle */}
 
           {/* <TooltipProvider> */}
@@ -118,7 +116,7 @@ const Sidebar = () => {
             {/* Logout */}
             <Tooltip>
               <TooltipTrigger>
-                <Button onClick={logoutHandler} size="icon" variant="outline" >
+                <Button onClick={logoutHandler} size="icon" variant="outline" className="border-0" >
                   <LogOut className="text-white" />
                 </Button>
               </TooltipTrigger>
