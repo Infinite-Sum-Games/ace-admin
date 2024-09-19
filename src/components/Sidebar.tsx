@@ -113,7 +113,7 @@ const Sidebar = () => {
             <Tooltip>
               <TooltipTrigger>
                 <Button onClick={logoutHandler} size="icon" variant="outline" className="border-0" >
-                  <LogOut className="dark:text-white" />
+                  <LogOut color="#c42a21" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right">Logout</TooltipContent>
