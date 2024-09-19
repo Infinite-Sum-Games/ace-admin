@@ -24,32 +24,32 @@ type SidebarItem = {
 
 const items: SidebarItem[] = [
   {
-    icon: <House className="mx-1 text-white" />,
+    icon: <House className="mx-1 dark:text-white" />,
     title: "Dashboard",
     link: "/dashboard"
   },
   {
-    icon: <TicketCheck className="mx-1 text-white" />,
+    icon: <TicketCheck className="mx-1 dark:text-white" />,
     title: "Events",
     link: "/events"
   },
   {
-    icon: <LandPlot className="mx-1 text-white" />,
+    icon: <LandPlot className="mx-1 dark:text-white" />,
     title: "Campaigns",
     link: "/campaigns"
   },
   {
-    icon: <NotebookPen className="mx-1 text-white" />,
+    icon: <NotebookPen className="mx-1 dark:text-white" />,
     title: "Blogs",
     link: "/blogs"
   },
   {
-    icon: <MessageCircleWarning className="mx-1 text-white" />,
+    icon: <MessageCircleWarning className="mx-1 dark:text-white" />,
     title: "Suggestions",
     link: "/suggestions"
   },
   {
-    icon: <UserCog className="mx-1 text-white" />,
+    icon: <UserCog className="mx-1 dark:text-white" />,
     title: "Admin",
     link: "/admin"
   }
@@ -92,11 +92,6 @@ const Sidebar = () => {
         </div>
 
         <div className="flex flex-col items-center gap-y-4">
-          {/* TODO: Setup Light-Dark model toggle */}
-
-          {/* <TooltipProvider> */}
-          {/* Profile */}
-
           {/* TODO: Profile pictures can be an add-on for later versions */}
           <TooltipProvider>
             <Tooltip>
@@ -118,7 +113,7 @@ const Sidebar = () => {
             <Tooltip>
               <TooltipTrigger>
                 <Button onClick={logoutHandler} size="icon" variant="outline" className="border-0" >
-                  <LogOut className="text-white" />
+                  <LogOut className="dark:text-white" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right">Logout</TooltipContent>

@@ -55,11 +55,11 @@ export function ModeToggleButton() {
   return (
     <>
       {dark ?
-        <Button onClick={() => toggleTheme(true)} size="icon" variant="outline">
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <Button onClick={() => toggleTheme(true)} size="icon" variant="outline" className="border-0">
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 dark:text-white" />
         </Button>
         :
-        <Button onClick={() => toggleTheme(false)} size="icon" variant="outline">
+        <Button onClick={() => toggleTheme(false)} size="icon" variant="outline" className="border-0">
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
         </Button>
       }
