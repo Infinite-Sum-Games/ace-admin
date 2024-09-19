@@ -1,7 +1,20 @@
-import { ChevronFirst, ChevronLast, CircleGauge, MailWarning, MoreVertical, Newspaper, Rss, ShieldCheck, TicketCheck } from "lucide-react";
+import {
+  CircleGauge,
+  LogOut,
+  MailWarning,
+  Newspaper,
+  Rss,
+  ShieldCheck,
+  TicketCheck
+} from "lucide-react";
+
 import { useState } from "react";
-import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
+import secureLocalStorage from "react-secure-storage";
+import { ModeToggle } from "./mode-toggle";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type SidebarItem = {
   icon: JSX.Element,
@@ -45,87 +58,55 @@ const items: SidebarItem[] = [
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const [expanded, setExpanded] = useState<boolean>(false);
 
-  const toggleCollapse = () => {
-    setExpanded(curr => !curr);
+  const logoutHandler = () => {
+    // TODO: Add confirmation screen before logging out
+    secureLocalStorage.clear();
+    navigate("/login")
   }
 
   // TODO: Capture firstName and lastName from secureLocalStorage after backend
-  // connectivity is done
+  // connectivity is done using a useEffect
+  const [firstName, setFirstName] = useState<string>("Ritesh");
+  const [lastName, setLastName] = useState<string>("Koushik");
 
   return (
-    <div className="h-screen w-1/4 pt-2 px-1 border-r">
-      <div className="h-full flex flex-col shadown-sm">
-        <div className={`flex ${expanded ? "justify-end" : ""}`}>
-          <Button size="icon" onClick={toggleCollapse}>
-            {
-              expanded ?
-                <ChevronFirst className="text-white" />
-                :
-                <ChevronLast className="text-white" />
-            }
-          </Button>
+    <div className="w-[] h-screen border-r bg-background">
+      <div className="flex flex-col items-center space-between p-2">
+        {/* Navigation Links */}
+        <div>
+          <></>
         </div>
 
-        <div className="">
-
-          {/* Sidebar Items */}
-          <div>
-            {items.map((item: SidebarItem, index: number) => (
-              <div key={index} className="py-1">
-                {
-                  expanded ?
-                    <Button
-                      className="w-full items-left"
-                      onClick={() => navigate(item.link)}
-                    >
-                      {item.icon}
-                      {item.title}
-                    </Button>
-                    :
-                    <Button
-                      onClick={() => navigate(item.link)}
-                      size="icon"
-                    >
-                      {item.icon}
-                    </Button>
-                }
-              </div>
-            ))}
-          </div>
-          {/* Profile Card */}
-          <div>
-            <ProfileItem
-              firstName="Ritesh"
-              lastName="Koushik"
-              expanded={expanded}
-            />
-          </div>
+        {/* Auxiliary Links */}
+        <div className="flex flex-col items-center gap-y-2">
+          {/* Theme */}
+          <Tooltip>
+            <TooltipTrigger>
+              <ModeToggle />
+            </TooltipTrigger>
+            <TooltipContent side="right">Toggle Theme</TooltipContent>
+          </Tooltip>
+          {/* Profile */}
+          <Tooltip>
+            <TooltipTrigger>
+              <Avatar>
+                <AvatarImage src="unreachable-link" alt="pfp" />
+                <AvatarFallback>{firstName.slice(0, 1) + lastName.slice(0, 1)}</AvatarFallback>
+              </Avatar>
+            </TooltipTrigger>
+            <TooltipContent side="right">Profile</TooltipContent>
+          </Tooltip>
+          {/* Logout */}
+          <Tooltip>
+            <TooltipTrigger>
+              <Button onClick={logoutHandler}>
+                <LogOut />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">Logout</TooltipContent>
+          </Tooltip>
         </div>
-      </div>
-    </div >
-  );
-}
-
-interface ProfileItemProps {
-  firstName: String,
-  lastName: String
-  expanded: boolean
-}
-
-const ProfileItem = ({ firstName, lastName, expanded }: ProfileItemProps) => {
-  return (
-    <div className="border-t flex p-3">
-      <span className="font-bold cursor-pointer">{firstName.slice(0, 1) + lastName.slice(0, 1)}</span>
-      <div
-        className={`flex justify-between items-center overflow-hidden  
-          transition-all ${expanded ? "w-52 ml-3" : "w-0"}`}
-      >
-        <div className="leading-4">
-          <h4>{firstName + " " + lastName}</h4>
-        </div>
-        <MoreVertical size={20} />
       </div>
     </div>
   );
