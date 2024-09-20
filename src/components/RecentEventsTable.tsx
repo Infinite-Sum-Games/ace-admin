@@ -100,7 +100,7 @@ export default function EventsTable() {
         <div>
           <CardTitle>Recent Events</CardTitle>
           <CardDescription className="pt-1.5">
-            Upcoming and past events in your club.
+            Upcoming, ongoing and past events at Amrita Centre for Entrepreneurship.
           </CardDescription>
         </div>
         <div className="flex items-center space-x-2">
@@ -116,13 +116,13 @@ export default function EventsTable() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        <div className="overflow-hidden rounded-lg border-2 border-border">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="px-4">Event Title</TableHead>
-                <TableHead className="px-4">Type</TableHead>
-                <TableHead className="px-4">Status</TableHead>
+                <TableHead className="px-4 text-center">Type</TableHead>
+                <TableHead className="px-4 text-center">Status</TableHead>
                 <TableHead className="px-4 text-right">Date</TableHead>
               </TableRow>
             </TableHeader>
@@ -138,21 +138,21 @@ export default function EventsTable() {
                       {event.venue}
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-center">
                     <Badge
                       className={`text-xs border-2 ${
                         event.paid
                           ? "border-[#5e4b8b] text-[#ab7df8] bg-[#2b2a43]"
-                          : "border-[#3d444d] text-[#6b6b6b] bg-accent"
+                          : "border-[#a6a6a6] text-[#a6a6a6] bg-accent"
                       }`}
                       variant="secondary"
                     >
                       {event.paid ? "Paid" : "Free"}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-center">
                     <Badge
-                      className={`flex justify-center max-w-[5rem] font-normal ${eventStatus(event).className}`}
+                      className={`font-normal ${eventStatus(event).className}`}
                       variant={eventStatus(event).variant}
                     >
                       {event.status}
