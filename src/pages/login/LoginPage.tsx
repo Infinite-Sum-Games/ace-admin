@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -14,6 +14,10 @@ import secureLocalStorage from "react-secure-storage";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
+  useEffect(() => {
+    document.title = "ACE | Login"
+  }, [])
+
   return (
     <div className="bg-[hsl(var(--background))]">
       <div className="w-full h-screen flex items-center justify-center">
