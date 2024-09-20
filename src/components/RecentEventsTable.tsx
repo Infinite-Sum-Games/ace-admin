@@ -84,14 +84,26 @@ export default function EventsTable() {
     navigate("/events");
   }
 
-  function eventStatus(event: Event): { className: string; variant: "outline" | "secondary" | "default" } {
+  function eventStatus(event: Event): {
+    className: string;
+    variant: "outline" | "secondary" | "default";
+  } {
     if (event.status === "Upcoming") {
-      return { className: "border-2 border-[#215c33] text-[#3fb950] bg-[#192f28]", variant: "outline" }; 
+      return {
+        className: "border-2 border-[#215c33] text-[#3fb950] bg-[#192f28]",
+        variant: "outline",
+      };
     } else if (event.status === "Ongoing") {
-      return { className: "border-2 border-[#674c17] text-[#d29922] bg-[#2e2a1f]", variant: "outline" }; 
+      return {
+        className: "border-2 border-[#674c17] text-[#d29922] bg-[#2e2a1f]",
+        variant: "outline",
+      };
     } else {
-      return { className: "border-2 border-[#254f88] text-[#4493f8] bg-[#192639]", variant: "outline" };
-    }       
+      return {
+        className: "border-2 border-[#254f88] text-[#4493f8] bg-[#192639]",
+        variant: "outline",
+      };
+    }
   }
 
   return (
@@ -100,14 +112,15 @@ export default function EventsTable() {
         <div>
           <CardTitle>Recent Events</CardTitle>
           <CardDescription className="pt-1.5">
-            Upcoming, ongoing and past events at Amrita Centre for Entrepreneurship.
+            Upcoming, ongoing and past events at Amrita Centre for
+            Entrepreneurship.
           </CardDescription>
         </div>
         <div className="flex items-center space-x-2">
           <Button
             variant="secondary"
             size="sm"
-            className="hover:bg-primary" 
+            className="hover:bg-primary"
             onClick={goToEvents}
           >
             <TicketCheckIcon className="pr-1.5" />
@@ -159,9 +172,13 @@ export default function EventsTable() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    {new Date(event.time).toLocaleDateString("en-IN", {
-                      dateStyle: "medium",
-                    })}
+                    {new Date(event.time)
+                      .toLocaleString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })
+                      .replace(/(\d+ \w+)/, "$1,")}
                   </TableCell>
                 </TableRow>
               ))}
