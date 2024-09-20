@@ -20,16 +20,6 @@ const ToggleGroup: React.FC<ToggleGroupProps> = ({ filter, onChange }) => {
       </button>
       <button
         className={`px-4 py-2 rounded-lg ${
-          filter === "All Time"
-            ? "bg-primary text-primary-foreground"
-            : "bg-secondary text-secondary-foreground"
-        }`}
-        onClick={() => onChange("All Time")}
-      >
-        All Time
-      </button>
-      <button
-        className={`px-4 py-2 rounded-lg ${
           filter === "Last Year"
             ? "bg-primary text-primary-foreground"
             : "bg-secondary text-secondary-foreground"
@@ -37,6 +27,16 @@ const ToggleGroup: React.FC<ToggleGroupProps> = ({ filter, onChange }) => {
         onClick={() => onChange("Last Year")}
       >
         Last Year
+      </button>
+      <button
+        className={`px-4 py-2 rounded-lg ${
+          filter === "All Time"
+            ? "bg-primary text-primary-foreground"
+            : "bg-secondary text-secondary-foreground"
+        }`}
+        onClick={() => onChange("All Time")}
+      >
+        All Time
       </button>
     </div>
   );

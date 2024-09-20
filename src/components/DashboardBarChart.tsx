@@ -1,21 +1,20 @@
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts"
-
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
 const chartConfig = {
   attendees: {
     label: "Attendees",
-    color: "hsl(var(--primary))",
+    color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
 
@@ -32,7 +31,7 @@ const chartData = [
   { month: "October", attendees: 400 },
   { month: "November", attendees: 350 },
   { month: "December", attendees: 225 },
-]
+];
 
 export function Overview() {
   return (
@@ -43,11 +42,8 @@ export function Overview() {
       </CardHeader>
       <CardContent className="pl-0">
         <ChartContainer config={chartConfig}>
-          <BarChart data={chartData} className=" min-h-[500] w-full">
-            <CartesianGrid
-              stroke="hsl(var(--border))"
-              vertical={false}
-            />
+          <BarChart data={chartData} className="min-h-[500px] w-full">
+            <CartesianGrid stroke="hsl(var(--border))" vertical={false} />
             <XAxis
               dataKey="month"
               tickLine={false}
@@ -70,12 +66,12 @@ export function Overview() {
             />
             <Bar
               dataKey="attendees"
-              fill="hsl(var(--primary))"
+              fill="hsl(var(--chart-1))"
               radius={8}
             />
           </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
