@@ -11,7 +11,6 @@ const EditEventForm: React.FC<EditEventFormProps> = ({ eventId, onClose }) => {
   const eventToEdit = eventList.find(event => event.id === eventId);
 
   const [title, setTitle] = useState(eventToEdit?.title || '');
-  const [organizer, setOrganizer] = useState(eventToEdit?.organizer || '');
   const [venue, setVenue] = useState(eventToEdit?.venue || '');
   const [cost, setCost] = useState(eventToEdit?.cost || '');
   const [start, setStart] = useState(eventToEdit?.start || '');
@@ -21,7 +20,7 @@ const EditEventForm: React.FC<EditEventFormProps> = ({ eventId, onClose }) => {
     setEventList(prevList =>
       prevList.map(event =>
         event.id === eventId
-          ? { ...event, title, organizer, venue, cost, start }
+          ? { ...event, title, venue, cost, start }
           : event
       )
     );
@@ -42,15 +41,7 @@ const EditEventForm: React.FC<EditEventFormProps> = ({ eventId, onClose }) => {
               className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md bg-gray-800 text-white"
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-300">Organizer</label>
-            <input
-              type="text"
-              value={organizer}
-              onChange={(e) => setOrganizer(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md bg-gray-800 text-white"
-            />
-          </div>
+  
           <div className="mb-4">
             <label className="block text-gray-300">Venue</label>
             <input
