@@ -71,7 +71,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="w-fit h-screen bg-[hsl(var(--background))]">
+    <div className="w-fit min-h-screen bg-[hsl(var(--background))]">
       <div className="flex flex-col justify-between p-2 h-full">
         {/* Navigation Links */}
         <div>
