@@ -12,6 +12,7 @@ import Error404 from './pages/errors/Error404'
 import BlogsPage from './pages/blogs/BlogsPage'
 import AdminPage from './pages/admin/AdminPage'
 import CampaignsPage from './pages/campaigns/CampaignsPage'
+import NewCampaign from './pages/campaigns/NewCampaign'
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/campaigns" element={<CampaignsPage />} />
+            <Route path="/campaigns/new" element={<NewCampaign />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/blogs" element={<BlogsPage />} />
             <Route path="/suggestions" element={<SuggestionsPage />} />
