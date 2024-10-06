@@ -1,13 +1,13 @@
 import { atom } from 'recoil';
 import { Newsletter } from "../components/NewsletterComponents/Columns";
 
-export const filterState = atom({
-  key: 'filterState', 
+export const filterDashboardCardState = atom({
+  key: 'filterDashboardCardState', 
   default: 'This Year',
 });
 
-export const markdownState = atom({
-  key: 'markdownState', 
+export const newCampaignMarkdownState = atom({
+  key: 'newCampaignMarkdownState', 
   default: `
 # [Newsletter Title]
 *Date: YYYY-MM-DD*
@@ -67,8 +67,8 @@ Thank you for reading! We look forward to sharing more updates with you next mon
 `, 
 });
 
-export const newsletterData = atom<Newsletter[]>({
-  key: "newsletterData",
+export const campaignData = atom<Newsletter[]>({
+  key: "campaignData",
   default: [
     {
       id: 1,
