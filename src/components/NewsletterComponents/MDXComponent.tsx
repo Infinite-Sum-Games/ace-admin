@@ -1,4 +1,3 @@
-import { markdownState } from "@/atoms/atoms";
 import {
   BlockTypeSelect,
   BoldItalicUnderlineToggles,
@@ -23,11 +22,16 @@ import { headingsPlugin } from "@mdxeditor/editor";
 
 import "@mdxeditor/editor/style.css";
 import { Separator } from "@radix-ui/react-separator";
-import { useRecoilState } from "recoil";
 import "./MDXComponent.css"
 
-function MDXComponent() {
-  const [content,setContent] = useRecoilState(markdownState);
+import { Dispatch, SetStateAction } from "react";
+
+interface MDXComponentProps {
+  content: string;
+  setContent: Dispatch<SetStateAction<string>>;
+}
+
+function MDXComponent({ content, setContent }: MDXComponentProps) {
   return (
     <div>
       <MDXEditor
