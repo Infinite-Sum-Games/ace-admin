@@ -27,43 +27,69 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { useRecoilState } from "recoil";
-import { markdownState } from "@/atoms/atoms";
+import { newCampaignMarkdownState } from "@/atoms/atoms";
 import { marked } from "marked";
-const formSchema = z.object({
-  title: z
+
+// Define allowed characters regex
+const allowedCharsRegex = /^[a-zA-Z0-9",:?([]{},!& ]*$/;
+
+// Define campaign schema with Zod
+const campaignSchema = z.object({
+  campaignTitle: z
     .string()
+    .trim()
     .max(120, { message: "Title must be 120 characters or less." })
-    .min(1, { message: "Title is required." }),
+    .min(1, { message: "Title is required." })
+    .regex(allowedCharsRegex, {
+      message: "Title contains invalid characters.",
+    }),
+
   blurb: z
     .string()
+    .trim()
     .max(120, { message: "Blurb must be 120 characters or less." })
-    .min(1, { message: "Blurb is required." }),
-  content: z.string(),
-  launchDate: z.date({ required_error: "Launch date is required." }),
+    .min(1, { message: "Blurb is required." })
+    .regex(allowedCharsRegex, {
+      message: "Blurb contains invalid characters.",
+    }),
+
+  frequency: z.enum(["Monthly", "Semesterly", "BiYearly", "Yearly", "None"]),
+
+  campaignContent: z
+    .array(
+      z.object({
+        content: z
+          .string()
+          .trim()
+          .min(1, { message: "Content is required." }),
+        scheduledOn: z.string().refine((date) => !isNaN(Date.parse(date)), {
+          message: "Scheduled date is required and must be valid.",
+        }),
+      })
+    )
+    .length(1, { message: "Exactly one campaign content is required." }),
 });
 
 export default function NewCampaign() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof campaignSchema>>({
+    resolver: zodResolver(campaignSchema),
     defaultValues: {
-      title: "",
-      blurb: "",
-      content: "",
-      launchDate: undefined,
+      campaignContent: [{ content: "", scheduledOn: "" }], // Default for one content entry
     },
   });
 
   const [titleCount, setTitleCount] = useState("0/120");
   const [blurbCount, setBlurbCount] = useState("0/120");
-  const [content] = useRecoilState(markdownState);
+  const [content] = useRecoilState(newCampaignMarkdownState);
   const rawhtml = marked(content);
 
   useEffect(() => {
     document.title = "ACE | Add New Campaign";
   }, []);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof campaignSchema>) {
     console.log(values);
+    // Handle form submission logic
   }
 
   return (
@@ -90,7 +116,7 @@ export default function NewCampaign() {
                   >
                     <FormField
                       control={form.control}
-                      name="title"
+                      name="campaignTitle"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-lg">Title</FormLabel>
@@ -130,7 +156,7 @@ export default function NewCampaign() {
                                 {...field}
                                 onChange={(e) => {
                                   field.onChange(e);
-                                  setBlurbCount(`${e.target.value.length}/120`);
+                                  setBlurbCount(`${e.target.value.length}/250`);
                                 }}
                               />
                               <span className="absolute right-3 top-3 text-xs text-muted-foreground">
@@ -142,22 +168,57 @@ export default function NewCampaign() {
                         </FormItem>
                       )}
                     />
+
+                    {/* Frequency Selection */}
                     <FormField
                       control={form.control}
-                      name="content"
-                      render={() => (
+                      name="frequency"
+                      render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Content</FormLabel>
+                          <FormLabel>Frequency</FormLabel>
                           <FormControl>
-                            <MDXComponent />
+                            <select className="border rounded p-2" {...field}>
+                              <option value="Monthly">Monthly</option>
+                              <option value="Semesterly">Semesterly</option>
+                              <option value="BiYearly">BiYearly</option>
+                              <option value="Yearly">Yearly</option>
+                              <option value="None">None</option>
+                            </select>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+
+                    {/* Single Content Entry */}
                     <FormField
                       control={form.control}
-                      name="launchDate"
+                      name="campaignContent.0.content"
+                      render={({ field }) => {
+                        const [content, setContent] = useRecoilState(
+                          newCampaignMarkdownState
+                        );
+
+                        return (
+                          <FormItem>
+                            <FormLabel>Content</FormLabel>
+                            <FormControl>
+                              <MDXComponent
+                                content={content}
+                                setContent={(newContent) => {
+                                  setContent(newContent);
+                                  field.onChange(newContent);
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="campaignContent.0.scheduledOn"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
                           <FormLabel>Launch Date</FormLabel>
@@ -172,7 +233,7 @@ export default function NewCampaign() {
                                   )}
                                 >
                                   {field.value ? (
-                                    format(field.value, "d MMM, yyyy")
+                                    format(new Date(field.value), "d MMM, yyyy")
                                   ) : (
                                     <span>Pick a date</span>
                                   )}
@@ -186,8 +247,14 @@ export default function NewCampaign() {
                             >
                               <Calendar
                                 mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
+                                selected={
+                                  field.value
+                                    ? new Date(field.value)
+                                    : undefined
+                                }
+                                onSelect={(date) =>
+                                  field.onChange(date ? date.toISOString() : "")
+                                }
                                 disabled={(date) =>
                                   date < new Date() ||
                                   date < new Date("1900-01-01")
@@ -203,6 +270,7 @@ export default function NewCampaign() {
                         </FormItem>
                       )}
                     />
+
                     <div className="flex space-x-2 col-span-2">
                       <Button type="submit" className="flex-1">
                         <Send className="mr-2 h-4 w-4" /> Submit Campaign
@@ -215,27 +283,36 @@ export default function NewCampaign() {
                 <div className="space-y-4">
                   <div>
                     <h3 className="font-semibold text-lg">Title</h3>
-                    <p>{form.watch("title") || "No title set"}</p>
+                    <p>{form.watch("campaignTitle") || "No title set"}</p>
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">Blurb</h3>
                     <p>{form.watch("blurb") || "No blurb set"}</p>
                   </div>
                   <div>
+                    <h3 className="font-semibold text-lg">Frequency</h3>
+                    <p>{form.watch("frequency") || "No frequency set"}</p>
+                  </div>
+                  <div>
                     <h3 className="font-semibold text-lg">Content</h3>
-                    <p className="prose">
-                      {rawhtml ? (
+                    {form.watch("campaignContent.0.content") ? (
+                      <div className="prose">
                         <div dangerouslySetInnerHTML={{ __html: rawhtml }} />
-                      ) : (
-                        "No content set"
-                      )}
-                    </p>
+                      </div>
+                    ) : (
+                      "No content set"
+                    )}
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">Launch Date</h3>
                     <p>
-                      {form.watch("launchDate")
-                        ? format(form.watch("launchDate"), "d MMM, yyyy")
+                      {form.watch("campaignContent.0.scheduledOn")
+                        ? format(
+                            new Date(
+                              form.watch("campaignContent.0.scheduledOn")
+                            ),
+                            "d MMM, yyyy"
+                          )
                         : "No date set"}
                     </p>
                   </div>
