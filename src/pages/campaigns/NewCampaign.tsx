@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { useRecoilState } from "recoil";
 import { newCampaignMarkdownState } from "@/atoms/atoms";
 import { marked } from "marked";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 // Define allowed characters regex
 const allowedCharsRegex = /^[a-zA-Z0-9",:?([]{},!& ]*$/;
@@ -58,10 +59,7 @@ const campaignSchema = z.object({
   campaignContent: z
     .array(
       z.object({
-        content: z
-          .string()
-          .trim()
-          .min(1, { message: "Content is required." }),
+        content: z.string().trim().min(1, { message: "Content is required." }),
         scheduledOn: z.string().refine((date) => !isNaN(Date.parse(date)), {
           message: "Scheduled date is required and must be valid.",
         }),
@@ -146,7 +144,7 @@ export default function NewCampaign() {
                       name="blurb"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Blurb</FormLabel>
+                          <FormLabel className="text-lg">Blurb</FormLabel>
                           <FormControl>
                             <div className="relative">
                               <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -175,15 +173,27 @@ export default function NewCampaign() {
                       name="frequency"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Frequency</FormLabel>
+                          <FormLabel className="text-lg pr-4">Frequency</FormLabel>
                           <FormControl>
-                            <select className="border rounded p-2" {...field}>
-                              <option value="Monthly">Monthly</option>
-                              <option value="Semesterly">Semesterly</option>
-                              <option value="BiYearly">BiYearly</option>
-                              <option value="Yearly">Yearly</option>
-                              <option value="None">None</option>
-                            </select>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <SelectTrigger className="w-[180px] border-border">
+                                <SelectValue placeholder="Select Frequency" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Monthly">Monthly</SelectItem>
+                                <SelectItem value="Semesterly">
+                                  Semesterly
+                                </SelectItem>
+                                <SelectItem value="BiYearly">
+                                  BiYearly
+                                </SelectItem>
+                                <SelectItem value="Yearly">Yearly</SelectItem>
+                                <SelectItem value="None">None</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -296,7 +306,7 @@ export default function NewCampaign() {
                   <div>
                     <h3 className="font-semibold text-lg">Content</h3>
                     {form.watch("campaignContent.0.content") ? (
-                      <div className="prose">
+                      <div className="prose py-2">
                         <div dangerouslySetInnerHTML={{ __html: rawhtml }} />
                       </div>
                     ) : (
