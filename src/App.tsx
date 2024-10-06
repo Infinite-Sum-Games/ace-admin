@@ -12,7 +12,8 @@ import Error404 from './pages/errors/Error404'
 import BlogsPage from './pages/blogs/BlogsPage'
 import AdminPage from './pages/admin/AdminPage'
 import CampaignsPage from './pages/campaigns/CampaignsPage'
-
+import NewEvent from './pages/events/NewEvent'
+import { EventAnalytics } from './pages/events/EventAnalytics' 
 function App() {
 
   return (
@@ -27,6 +28,8 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/campaigns" element={<CampaignsPage />} />
             <Route path="/events" element={<EventsPage />} />
+            <Route path='/events/new' element={<NewEvent />}/>
+            <Route path='/events/analytics' element={<EventAnalytics />} />
             <Route path="/blogs" element={<BlogsPage />} />
             <Route path="/suggestions" element={<SuggestionsPage />} />
             <Route path="/admin" element={<AdminPage />} />

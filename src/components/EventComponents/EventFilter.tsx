@@ -6,7 +6,7 @@ import {
   eventFilterState,
   activeTabState,
   selectedDateState,
-  yearFilterState, // Add this import
+  yearFilterState,
 } from '@/atoms/eventState';
 import { Input } from '@/components/ui/input';
 import {
@@ -20,7 +20,9 @@ import {
 import { Filter, Search, Calendar, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { List } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import DatePicker from './DatePicker'; // Import the DatePicker component
+import { useNavigate } from 'react-router-dom';
 
 const EventFilter: React.FC = () => {
   const [filter, setFilter] = useRecoilState(eventFilterState);
@@ -28,8 +30,9 @@ const EventFilter: React.FC = () => {
   const [dateFilter, setDateFilter] = useRecoilState(eventDateFilterState);
   const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
   const [activeTab, setActiveTab] = useRecoilState(activeTabState);
-  const [selectedYear, setSelectedYear] = useRecoilState(yearFilterState); // Use recoil state for year
-
+  const [selectedYear, setSelectedYear] = useRecoilState(yearFilterState);
+  const [isFormOpen, setIsFormOpen] = useState(false); // State to manage form visibility
+  const Navigate = useNavigate();
   const clearFilter = () => {
     setFilter('');
     setCostFilter('');
@@ -59,9 +62,17 @@ const EventFilter: React.FC = () => {
     setSelectedYear(Number(e.target.value));
   };
 
+  const handleAddEventClick = () => {
+    setIsFormOpen(true); // Open the CreateEventForm
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false); // Close the CreateEventForm
+  };
+
   return (
     <div className="space-y-4 mb-4">
-      <div className="flex items-center space-x-6">
+      <div className="flex items-center space-x-6 justify-between">
         {/* Search Input */}
         <div className="relative flex-grow">
           <Input
@@ -75,28 +86,25 @@ const EventFilter: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-2 border border-gray-600 rounded-lg bg-gray-800 px-4 py-2 w-fit">
-  {/* Lucide React Calendar Icon */}
-  <Calendar className="text-white w-5 h-5" />
-
-{/* Select Dropdown */}
-<select
-  value={selectedYear}
-  onChange={handleYearChange}
-  className="bg-transparent text-white border-none focus:ring-0 outline-none px-2 cursor-pointer"
->
-  {/* Render years from 2018 to the current year */}
-  {[...Array(new Date().getFullYear() - 2017)].map((_, index) => (
-    <option
-      key={index}
-      value={2018 + index}
-      className="bg-[hsl(var(--background))] text-[hsl(var(--foreground))]"
-    >
-      {2018 + index}
-    </option>
-  ))}
-</select>
-
-
+          {/* Lucide React Calendar Icon */}
+          <Calendar className="text-white w-5 h-5" />
+          {/* Select Dropdown */}
+          <select
+            value={selectedYear}
+            onChange={handleYearChange}
+            className="bg-transparent text-white border-none focus:ring-0 outline-none px-2 cursor-pointer"
+          >
+            {/* Render years from 2018 to the current year */}
+            {[...Array(new Date().getFullYear() - 2017)].map((_, index) => (
+              <option
+                key={index}
+                value={2018 + index}
+                className="bg-[hsl(var(--background))] text-[hsl(var(--foreground))]"
+              >
+                {2018 + index}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* DatePicker Component */}
@@ -192,6 +200,18 @@ const EventFilter: React.FC = () => {
             <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* Add Button on the rightmost end */}
+        <div>
+          <Button
+            variant="default"
+            className="w-24 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition duration-150 ease-in-out"
+            onClick={()=>Navigate('/events/new')} // Open the CreateEventForm on click
+          >
+            <Plus className='mr-2'/>
+            Add
+          </Button>
+        </div>
       </div>
     </div>
   );
