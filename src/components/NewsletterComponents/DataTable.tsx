@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { DataTablePagination } from "./tablePagination";
 import { YearFilter, StatusFilter, ResetFiltersButton } from "./DataTableFilters";
-
+import { useNavigate } from "react-router-dom";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -99,6 +99,12 @@ export function DataTable<TData, TValue>({
     setSorting([]);
   }
 
+  const navigate = useNavigate();
+
+   function addCampaign() {
+    navigate("/campaigns/new");
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between pb-4">
@@ -133,6 +139,7 @@ export function DataTable<TData, TValue>({
             <Button
               className="ml-2 flex items-center font-semibold py-2 rounded"
               variant="default"
+              onClick={addCampaign}
             >
               <PlusIcon className="mr-2" />
               Add
