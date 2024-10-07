@@ -13,6 +13,8 @@ import BlogsPage from './pages/blogs/BlogsPage'
 import AdminPage from './pages/admin/AdminPage'
 import CampaignsPage from './pages/campaigns/CampaignsPage'
 import NewCampaign from './pages/campaigns/NewCampaign'
+import NewEvent from './pages/events/NewEvent'
+import { EventAnalytics } from './pages/events/EventAnalytics' 
 
 function App() {
 
@@ -29,6 +31,8 @@ function App() {
             <Route path="/campaigns" element={<CampaignsPage />} />
             <Route path="/campaigns/new" element={<NewCampaign />} />
             <Route path="/events" element={<EventsPage />} />
+            <Route path='/events/new' element={<NewEvent />}/>
+            <Route path='/events/analytics' element={<EventAnalytics />} />
             <Route path="/blogs" element={<BlogsPage />} />
             <Route path="/suggestions" element={<SuggestionsPage />} />
             <Route path="/admin" element={<AdminPage />} />
