@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import EventsTable from "./EventTable";
 import EventFilter from "./EventFilter";
 
