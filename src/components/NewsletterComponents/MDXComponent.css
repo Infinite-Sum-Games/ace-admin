@@ -1,0 +1,149 @@
+.dark .mdxeditor {
+  background-color: hsl(var(--background));
+  border: 2px solid hsl(var(--border));
+  border-radius: var(--radius);
+  color: hsl(var(--primary-foreground));
+}
+
+.dark .mdxeditor-toolbar {
+  background-color: hsl(var(--accent));
+  border-bottom: 1px solid hsl(var(--muted));
+}
+
+.dark .prose {
+  max-width: none;
+  color: hsl(var(--foreground));
+}
+
+.dark .prose h1 {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose h2 {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose h3 {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose h4 {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose h5 {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose h6 {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose strong {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose a {
+  color: hsl(var(--primary));
+}
+
+.dark .prose a:hover {
+  color: hsl(var(--primary));
+}
+
+.dark .prose p {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose blockquote {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose pre {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose code {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose ol {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose ul {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose li {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose table {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose thead {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose tbody {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose tr {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose th {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose td {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose img {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose video {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose figure {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose figcaption {
+  color: hsl(var(--foreground));
+}
+
+.dark .prose hr {
+  color: hsl(var(--foreground));
+}
+
+.dark .mdxeditor-select-content {
+  background-color: hsl(var(--background));
+  border: 2px solid hsl(var(--border));
+  border-radius: var(--radius);
+  color: hsl(var(--foreground));
+}
+
+.dark .mdxeditor-popup-container tablePop {
+  background-color: hsl(var(--background));
+  border: 2px solid hsl(var(--border));
+  border-radius: var(--radius);
+}
+
+.dark .dialogContent {
+  background-color: hsl(var(--background));
+  border: 2px solid hsl(var(--border));
+  border-radius: var(--radius);
+}
+
+.dark .dark-editor {
+  --basePageBg: hsl(var(--card));
+  --baseText: hsl(var(--foreground));
+  color: hsl(var(--foreground));
+}

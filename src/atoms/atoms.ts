@@ -1,13 +1,74 @@
 import { atom } from 'recoil';
 import { Newsletter } from "../components/NewsletterComponents/Columns";
 
-export const filterState = atom({
-  key: 'filterState', 
+export const filterDashboardCardState = atom({
+  key: 'filterDashboardCardState', 
   default: 'This Year',
 });
 
-export const newsletterData = atom<Newsletter[]>({
-  key: "newsletterData",
+export const newCampaignMarkdownState = atom({
+  key: 'newCampaignMarkdownState', 
+  default: `
+# [Newsletter Title]
+*Date: YYYY-MM-DD*
+
+---
+
+## Welcome Message
+Hello [Readers],
+
+Welcome to this month's edition of our newsletter! We have some exciting updates and resources to share with you.
+
+---
+
+## Featured Article
+### [Article Title]
+*Author: [Author Name]*  
+*Published on: YYYY-MM-DD*
+
+[Brief introduction to the article or summary. You can include a link to read more.](#)
+
+---
+
+## Upcoming Events
+### [Event Title]
+- **Date:** YYYY-MM-DD
+- **Time:** HH:MM AM/PM
+- **Location:** [Venue or Link to Event]
+  
+[Short description of the event and a link for registration if applicable.]
+
+---
+
+## Community Highlights
+- **Highlight 1:** [Description or link]
+- **Highlight 2:** [Description or link]
+- **Highlight 3:** [Description or link]
+
+---
+
+## Resources
+- [Resource Title 1](#) - Brief description of what this resource offers.
+- [Resource Title 2](#) - Brief description of what this resource offers.
+- [Resource Title 3](#) - Brief description of what this resource offers.
+
+---
+
+## Contact Information
+For questions or contributions, please reach out to us at [email@example.com].
+
+---
+
+Thank you for reading! We look forward to sharing more updates with you next month.
+
+---
+
+*Follow us on [Social Media Links]*
+`, 
+});
+
+export const campaignData = atom<Newsletter[]>({
+  key: "campaignData",
   default: [
     {
       id: 1,
