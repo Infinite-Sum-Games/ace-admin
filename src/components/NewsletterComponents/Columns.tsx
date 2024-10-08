@@ -1,24 +1,62 @@
-import { newsletterData } from "@/atoms/atoms";
-import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Trash2, ChartNoAxesCombined, ArrowUpDown, EyeIcon } from "lucide-react";
-import { useRecoilState } from "recoil";
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { TableCell } from "../ui/table";
-import { Badge } from "../ui/badge";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import EditSheet from './EditSheet';
-import AlertDialogComponent from './AlertDialogComponent';
+import { campaignData } from "@/atoms/atoms"
+import { ColumnDef } from "@tanstack/react-table"
+import {
+  Edit,
+  Trash2,
+  ChartNoAxesCombined,
+  ArrowUpDown,
+  BookText,
+} from "lucide-react"
+import { useRecoilState } from "recoil"
+import { useState } from "react"
+import { Button } from "../ui/button"
+import { TableCell } from "../ui/table"
+import { Badge } from "../ui/badge"
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip"
+import EditDialog from "./EditCampaignDialog"
+import AlertDialogComponent from "./AlertDialogComponent"
+import { useNavigate } from "react-router-dom"
+
+export enum Status {
+  Draft = "Draft",
+  Published = "Published",
+}
+
+export enum CampaignFrequency {
+  Monthly = "Monthly",
+  Semesterly = "Semesterly",
+  BiYearly = "BiYearly",
+  Yearly = "Yearly",
+  None = "None",
+}
 
 export type Newsletter = {
-  id: number;
-  title: string;
-  blurb: string;
-  content: string;
-  status: "Draft" | "Published";
-  createdAt: Date;
-  updatedAt: Date;
-};
+  id: string
+  campaignTitle: string
+  blurb: string
+  frequency: CampaignFrequency
+  createdAt: Date
+  updatedAt: Date
+  campaignContent: CampaignContent[]
+  subscribers: Subscribers[]
+}
+
+export type CampaignContent = {
+  id: number
+  campaignId?: string
+  content: string
+  status: Status
+  scheduledOn: Date
+}
+
+export type Subscribers = {
+  // Define subscribers properties as needed
+}
 
 export const columns: ColumnDef<Newsletter>[] = [
   {
@@ -38,7 +76,7 @@ export const columns: ColumnDef<Newsletter>[] = [
     cell: ({ row }) => <div className="text-left px-4">{row.original.id}</div>,
   },
   {
-    accessorKey: "title",
+    accessorKey: "campaignTitle",
     header: ({ column }) => (
       <div className="text-left">
         <Button
@@ -52,35 +90,50 @@ export const columns: ColumnDef<Newsletter>[] = [
     ),
     cell: ({ row }) => (
       <TableCell>
-        <div className="font-normal text-base">{row.original.title}</div>
-        <div className="text-sm text-muted-foreground">{row.original.blurb}</div>
+        <div className="font-normal text-base">
+          {row.original.campaignTitle}
+        </div>
+        <div className="text-sm text-muted-foreground">
+          {row.original.blurb}
+        </div>
       </TableCell>
     ),
   },
   {
     accessorKey: "status",
     header: () => <div className="text-center">Status</div>,
-    cell: (row) => {
-      const status = row.getValue() as "Draft" | "Published";
-      const badgeProps =
-        status === "Draft"
-          ? { className: "border-2 border-[#215c33] text-[#3fb950] bg-[#192f28]", label: "Draft" }
-          : { className: "border-2 border-[#254f88] text-[#4493f8] bg-[#192639]", label: "Published" };
+    cell: ({ row }) => {
+      const { campaignContent } = row.original
+      const latestContent = campaignContent[campaignContent.length - 1]
+
+      let status: Status
+      if (latestContent) {
+        const isDraft = new Date(latestContent.scheduledOn) > new Date()
+        status = isDraft ? Status.Draft : latestContent.status
+      } else {
+        status = Status.Draft // Default to Draft if no content
+      }
 
       return (
         <div className="text-center">
-          <Badge className={`text-xs ${badgeProps.className}`} variant="outline">
-            {badgeProps.label}
+          <Badge
+            className={`text-xs ${
+              status === Status.Draft
+                ? "border-2 border-[#215c33] text-[#3fb950] bg-[#192f28]"
+                : "border-2 border-[#254f88] text-[#4493f8] bg-[#192639]"
+            }`}
+          >
+            {status}
           </Badge>
         </div>
-      );
+      )
     },
   },
   {
     accessorKey: "createdAt",
     header: () => <div className="text-center">Created On</div>,
     cell: (row) => {
-      const date = row.getValue() as Date;
+      const date = row.getValue() as Date
       return (
         <div className="text-center">
           {date.toLocaleDateString("en-IN", {
@@ -89,18 +142,18 @@ export const columns: ColumnDef<Newsletter>[] = [
             day: "numeric",
           })}
         </div>
-      );
+      )
     },
     filterFn: (row, columnId, value) => {
-      const year = new Date(row.getValue(columnId)).getFullYear();
-      return value.includes(year);
+      const status = row.getValue(columnId)
+      return value.includes(status)
     },
   },
   {
     accessorKey: "updatedAt",
     header: () => <div className="text-center">Last Updated</div>,
     cell: (row) => {
-      const date = row.getValue() as Date;
+      const date = row.getValue() as Date
       return (
         <div className="text-center">
           {date.toLocaleDateString("en-IN", {
@@ -109,64 +162,70 @@ export const columns: ColumnDef<Newsletter>[] = [
             day: "numeric",
           })}
         </div>
-      );
+      )
     },
   },
   {
     accessorKey: "actions",
     header: () => <div className="text-right pr-4">Actions</div>,
     cell: ({ row }) => {
-      const [, setData] = useRecoilState(newsletterData);
-      const [isDialogOpen, setDialogOpen] = useState(false);
-      const [selectedId, setSelectedId] = useState<number | null>(null);
-      const [isEditSheetOpen, setEditSheetOpen] = useState(false);
+      const [, setData] = useRecoilState(campaignData)
+      const [isDialogOpen, setDialogOpen] = useState(false)
+      const [selectedId, setSelectedId] = useState<string | null>(null)
+      const [isEditDialogOpen, setEditDialogOpen] = useState(false)
 
       function handleDelete() {
         setData((prevData: Newsletter[]) =>
           prevData.filter((campaign) => campaign.id !== selectedId)
-        );
-        setDialogOpen(false);
+        )
+        setDialogOpen(false)
       }
 
       function handleEdit(newsletter: Newsletter) {
-        setEditSheetOpen(true);
-        setSelectedId(newsletter.id);
+        setEditDialogOpen(true)
+        setSelectedId(newsletter.id)
       }
 
       const handleSave = (updatedNewsletter: Newsletter) => {
-        const updatedDate = new Date();
+        const updatedDate = new Date()
         setData((prevData: Newsletter[]) =>
           prevData.map((newsletter) =>
             newsletter.id === selectedId
               ? { ...updatedNewsletter, updatedAt: updatedDate }
               : newsletter
           )
-        );
-      };
+        )
+      }
+      const navigate = useNavigate()
+      function seeEditions() {
+        navigate(`/campaigns/${row.original.id}/editions`)
+      }
 
       return (
         <TooltipProvider>
           <div className="flex justify-end space-x-2">
             <ActionButton
-              icon={<Edit className="w-5 h-5" color="#3b82f6"/>}
+              icon={<Edit className="w-5 h-5" color="#3b82f6" />}
               onClick={() => handleEdit(row.original)}
               tooltipContent="Edit"
             />
             <ActionButton
-              icon={<EyeIcon className="w-5 h-5" color="#3b82f6"/>}
-              onClick={() => {/* Add preview functionality */}}
-              tooltipContent="Preview"
+              icon={<BookText className="w-5 h-5" color="#3b82f6" />}
+              onClick={seeEditions}
+              tooltipContent="See Editions"
             />
             <ActionButton
-              icon={<ChartNoAxesCombined className="w-5 h-5" color="#3b82f6"/>}
-              onClick={() => {/* Add analytics functionality */}}
+              icon={<ChartNoAxesCombined className="w-5 h-5" color="#3b82f6" />}
+              onClick={() => {
+                /* Add analytics functionality */
+              }}
               tooltipContent="View Analytics"
             />
             <ActionButton
-              icon={<Trash2 className="w-5 h-5" color="#3b82f6"/>}
+              icon={<Trash2 className="w-5 h-5" color="#3b82f6" />}
               onClick={() => {
-                setSelectedId(row.original.id);
-                setDialogOpen(true);
+                setSelectedId(row.original.id)
+                setDialogOpen(true)
               }}
               tooltipContent="Delete"
             />
@@ -179,23 +238,23 @@ export const columns: ColumnDef<Newsletter>[] = [
               description="This action cannot be undone. This will permanently delete the newsletter."
             />
 
-            <EditSheet
-              open={isEditSheetOpen}
-              onOpenChange={setEditSheetOpen}
+            <EditDialog
+              open={isEditDialogOpen}
+              onOpenChange={setEditDialogOpen}
               newsletter={row.original}
               onSave={handleSave}
             />
           </div>
         </TooltipProvider>
-      );
+      )
     },
   },
-];
+]
 
 interface ActionButtonProps {
-  icon: React.ReactNode;
-  onClick: () => void;
-  tooltipContent: string;
+  icon: React.ReactNode
+  onClick: () => void
+  tooltipContent: string
 }
 
 function ActionButton({ icon, onClick, tooltipContent }: ActionButtonProps) {
@@ -214,5 +273,5 @@ function ActionButton({ icon, onClick, tooltipContent }: ActionButtonProps) {
         <p>{tooltipContent}</p>
       </TooltipContent>
     </Tooltip>
-  );
+  )
 }

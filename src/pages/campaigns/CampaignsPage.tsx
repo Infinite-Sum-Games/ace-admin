@@ -3,7 +3,7 @@ import {
   columns,
 } from "../../components/NewsletterComponents/Columns";
 import { DataTable } from "../../components/NewsletterComponents/DataTable";
-import { newsletterData } from "../../atoms/atoms";
+import { campaignData } from "../../atoms/atoms";
 import { useRecoilState } from "recoil";
 import Sidebar from "../../components/Sidebar";
 const CampaignsPage: React.FC = () => {
@@ -11,7 +11,7 @@ const CampaignsPage: React.FC = () => {
     document.title = "ACE | Campaigns";
   }, []);
 
-  const [data] = useRecoilState(newsletterData);
+  const [data] = useRecoilState(campaignData);
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
