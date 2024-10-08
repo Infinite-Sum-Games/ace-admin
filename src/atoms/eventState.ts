@@ -4,8 +4,46 @@ export const activeTabState = atom<string>({
   key: 'activeTabState',
   default: 'all',
 });
-
-
+interface RegisteredParticipant {
+  id: string;
+  name: string;
+  email: string;
+  status: string;
+  department:string;
+}
+interface EventRegistration {
+  eventId: string;
+  eventTitle: string;
+  registeredParticipants: RegisteredParticipant[];
+}
+export const eventRegistrationState = atom<EventRegistration[]>({
+  key: 'eventRegistrationState',
+  default: [
+    {
+      eventId: '1',
+      eventTitle: 'Event 1',
+      registeredParticipants: [
+        { id: '101', name: 'Alice', email: 'alice@example.com', status: 'checked in',department:'CSE' },
+        { id: '102', name: 'Bob', email: 'bob@example.com', status: 'not checked in',department:'EEE' },
+        { id: '103', name: 'Participant3', email: 'alice@example.com', status: 'checked in',department:'MEE' },
+        { id: '104', name: 'Bob', email: 'bob@example.com', status: 'not checked in',department:'CSE' },
+      ],
+    },
+    {
+      eventId: '2',
+      eventTitle: 'Event 2',
+      registeredParticipants: [
+        { id: '103', name: 'Charlie', email: 'charlie@example.com', status: 'checked in',department:'CSE' },
+      ],
+    },
+    {
+      eventId: '3',
+      eventTitle: 'Event 3',
+      registeredParticipants: [],
+    },
+    // Add more events with participants as needed
+  ],
+});
 export const eventListState = atom<Event[]>({
   key: 'eventListState',
   default: [
@@ -21,6 +59,8 @@ export const eventListState = atom<Event[]>({
     { id: '10', title: 'Event 10', venue: 'Venue 10', cost: 'Free', start: '2024-09-22',  status: 'completed' },
   ], 
 });
+
+
 export const yearFilterState = atom<number>({
   key: 'yearFilterState',
   default: new Date().getFullYear(),
