@@ -5,7 +5,7 @@ import {
   columns,
 } from "../../components/NewsletterComponents/Columns";
 import { EventDataTable } from "../../components/EventComponents/EventDataTable";
-import { newsletterData } from "../../atoms/atoms";
+import { campaignData } from "../../atoms/atoms";
 import { useRecoilState } from "recoil";
 
 
@@ -16,7 +16,7 @@ export const EventAnalytics:React.FC= () =>
           document.title = "ACE | Campaigns";
         }, []);
       
-        const [data] = useRecoilState(newsletterData);
+        const [data] = useRecoilState(campaignData);
         return (
           <div className="flex min-h-screen bg-background">
             <Sidebar />

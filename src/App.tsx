@@ -16,6 +16,7 @@ import NewCampaign from './pages/campaigns/NewCampaign'
 import CampaignEditions from './pages/campaigns/CampaignEditions'
 import NewEvent from './pages/events/NewEvent'
 import { EventAnalytics } from './pages/events/EventAnalytics' 
+import EditCampaignContent from './pages/campaigns/EditCampaignContent'
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
             <Route path="/campaigns" element={<CampaignsPage />} />
             <Route path="/campaigns/new" element={<NewCampaign />} />
             <Route path="/campaigns/:id/editions" element={<CampaignEditions />} />
+            <Route path="/campaigns/:id/editions/:contentID/edit" element={<EditCampaignContent />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path='/events/new' element={<NewEvent />}/>
             <Route path='/events/analytics' element={<EventAnalytics />} />

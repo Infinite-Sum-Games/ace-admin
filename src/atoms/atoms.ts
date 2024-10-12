@@ -1,5 +1,12 @@
 import { atom } from 'recoil';
 import { CampaignFrequency, Newsletter, Status,  } from "../components/NewsletterComponents/Columns";
+import { campaignEditionById } from '@/pages/campaigns/CampaignEditions';
+import { CampaignContentEditData } from '@/pages/campaigns/EditCampaignContent';
+
+export const campaignEditionByIdData = atom<campaignEditionById>({
+  key: 'campaignEditionByIdData', 
+  default: {} as campaignEditionById,
+});
 
 export const filterDashboardCardState = atom({
   key: 'filterDashboardCardState', 
@@ -65,6 +72,11 @@ Thank you for reading! We look forward to sharing more updates with you next mon
 
 *Follow us on [Social Media Links]*
 `, 
+});
+
+export const editedCampaignContentState = atom({
+  key: "editedCampaignContentState",
+  default: {} as CampaignContentEditData,
 });
 
 export const campaignData = atom<Newsletter[]>({
