@@ -9,8 +9,11 @@ interface RegisteredParticipant {
   name: string;
   email: string;
   status: string;
-  department:string;
+  department: string;
+  ticketid: string;
+  registeredDate: string;  // New field
 }
+
 interface EventRegistration {
   eventId: string;
   eventTitle: string;
@@ -23,27 +26,58 @@ export const eventRegistrationState = atom<EventRegistration[]>({
       eventId: '1',
       eventTitle: 'Event 1',
       registeredParticipants: [
-        { id: '101', name: 'Alice', email: 'alice@example.com', status: 'checked in',department:'CSE' },
-        { id: '102', name: 'Bob', email: 'bob@example.com', status: 'not checked in',department:'EEE' },
-        { id: '103', name: 'Participant3', email: 'alice@example.com', status: 'checked in',department:'MEE' },
-        { id: '104', name: 'Bob', email: 'bob@example.com', status: 'not checked in',department:'CSE' },
+        { id: '101', ticketid: '3030', name: 'Participant1', email: 'alice@example.com', status: 'checked in', department: 'CSE', registeredDate: '2024-09-26' },
+        { id: '102', ticketid: '3030', name: 'Participant2', email: 'bob@example.com', status: 'not checked in', department: 'EEE', registeredDate: '2024-09-26' },
+        { id: '103', ticketid: '3030', name: 'Participant3', email: 'alice@example.com', status: 'checked in', department: 'MEE', registeredDate: '2024-09-27' },
+        { id: '105', ticketid: '3030', name: 'Participant4', email: 'bob@example.com', status: 'not checked in', department: 'CSE', registeredDate: '2024-09-26' },
+        { id: '106', ticketid: '3030', name: 'Participant5', email: 'alice@example.com', status: 'checked in', department: 'CSE', registeredDate: '2024-09-27' },
+        { id: '107', ticketid: '3030', name: 'Participant6', email: 'bob@example.com', status: 'not checked in', department: 'EEE', registeredDate: '2024-09-30' },
+        { id: '108', ticketid: '3030', name: 'Participant7', email: 'alice@example.com', status: 'checked in', department: 'MEE', registeredDate: '2024-10-01' },
+        { id: '109', ticketid: '3030', name: 'Participant8', email: 'bob@example.com', status: 'not checked in', department: 'CSE', registeredDate: '2024-10-01' },
+        { id: '110', ticketid: '3030', name: 'Participant9', email: 'alice@example.com', status: 'checked in', department: 'CSE', registeredDate: '2024-10-01' },
+        { id: '112', ticketid: '3030', name: 'Participant10', email: 'bob@example.com', status: 'not checked in', department: 'EEE', registeredDate: '2024-10-01' },
+        { id: '113', ticketid: '3030', name: 'Participant11', email: 'alice@example.com', status: 'checked in', department: 'MEE', registeredDate: '2024-10-07' },
+        { id: '114', ticketid: '3030', name: 'Participant12', email: 'bob@example.com', status: 'not checked in', department: 'CSE', registeredDate: '2024-10-05' },
+        { id: '115', ticketid: '3030', name: 'Participant15', email: 'alice@example.com', status: 'checked in', department: 'CSE', registeredDate: '2024-10-07' },
+        { id: '116', ticketid: '3030', name: 'Participant17', email: 'bob@example.com', status: 'not checked in', department: 'ARE', registeredDate: '2024-10-08' },
+        { id: '117', ticketid: '3030', name: 'Participant21', email: 'alice@example.com', status: 'checked in', department: 'CSE', registeredDate: '2024-10-08' },
+        { id: '118', ticketid: '3030', name: 'Participant32', email: 'bob@example.com', status: 'not checked in', department: 'CSE', registeredDate: '2024-10-09' },
       ],
     },
     {
       eventId: '2',
       eventTitle: 'Event 2',
       registeredParticipants: [
-        { id: '103', name: 'Charlie', email: 'charlie@example.com', status: 'checked in',department:'CSE' },
+        { id: '103', ticketid: '3030', name: 'Charlie', email: 'charlie@example.com', status: 'checked in', department: 'CSE', registeredDate: '2024-09-30' },
       ],
     },
     {
       eventId: '3',
       eventTitle: 'Event 3',
-      registeredParticipants: [],
+      registeredParticipants: [
+        { id: '103', ticketid: '3030', name: 'Participant3', email: 'alice@example.com', status: 'checked in', department: 'MEE', registeredDate: '2024-09-27' },
+        { id: '105', ticketid: '3030', name: 'Participant4', email: 'bob@example.com', status: 'not checked in', department: 'CSE', registeredDate: '2024-09-26' },
+        { id: '106', ticketid: '3030', name: 'Participant5', email: 'alice@example.com', status: 'checked in', department: 'CSE', registeredDate: '2024-09-27' },
+        { id: '107', ticketid: '3030', name: 'Participant6', email: 'bob@example.com', status: 'not checked in', department: 'EEE', registeredDate: '2024-09-30' },
+        { id: '108', ticketid: '3030', name: 'Participant7', email: 'alice@example.com', status: 'checked in', department: 'MEE', registeredDate: '2024-10-01' },
+        { id: '109', ticketid: '3030', name: 'Participant8', email: 'bob@example.com', status: 'not checked in', department: 'CSE', registeredDate: '2024-10-01' },
+      ],
     },
-    // Add more events with participants as needed
+    {
+      eventId: '4',
+      eventTitle: 'Event 4',
+      registeredParticipants: [
+        { id: '1103', ticketid: '3030', name: 'Participant3', email: 'alice@example.com', status: 'checked in', department: 'MEE', registeredDate: '2024-12-27' },
+        { id: '1105', ticketid: '3030', name: 'Participant4', email: 'bob@example.com', status: 'not checked in', department: 'CSE', registeredDate: '2024-12-7' },
+        { id: '1106', ticketid: '3030', name: 'Participant5', email: 'alice@example.com', status: 'checked in', department: 'CSE', registeredDate: '2024-12-7' },
+        { id: '1107', ticketid: '3030', name: 'Participant6', email: 'bob@example.com', status: 'not checked in', department: 'EEE', registeredDate: '2024-12-2' },
+        { id: '1108', ticketid: '3030', name: 'Participant7', email: 'alice@example.com', status: 'checked in', department: 'MEE', registeredDate: '2024-12-7' },
+        { id: '1109', ticketid: '3030', name: 'Participant8', email: 'bob@example.com', status: 'not checked in', department: 'CSE', registeredDate: '2024-12-2' },
+      ],
+    },
   ],
 });
+
 export const eventListState = atom<Event[]>({
   key: 'eventListState',
   default: [

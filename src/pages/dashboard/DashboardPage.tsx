@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRecoilState } from "recoil";
-import { filterState } from "@/atoms/atoms";
+import { filterDashboardCardState } from "@/atoms/atoms";
 import ToggleGroup from "@/components/toggle-group";
 import {
   User,
@@ -28,7 +28,7 @@ interface Metric {
 }
 
 const Dashboard: React.FC = () => {
-  const [filter, setFilter] = useRecoilState(filterState);
+  const [filter, setFilter] = useRecoilState(filterDashboardCardState);
 
   const data = {
     activeMembers: {

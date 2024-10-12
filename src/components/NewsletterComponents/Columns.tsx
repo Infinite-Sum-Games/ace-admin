@@ -1,4 +1,4 @@
-import { newsletterData } from "@/atoms/atoms";
+import { campaignData } from "@/atoms/atoms";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash2, ChartNoAxesCombined, ArrowUpDown, EyeIcon } from "lucide-react";
 import { useRecoilState } from "recoil";
@@ -116,7 +116,7 @@ export const columns: ColumnDef<Newsletter>[] = [
     accessorKey: "actions",
     header: () => <div className="text-right pr-4">Actions</div>,
     cell: ({ row }) => {
-      const [, setData] = useRecoilState(newsletterData);
+      const [, setData] = useRecoilState(campaignData);
       const [isDialogOpen, setDialogOpen] = useState(false);
       const [selectedId, setSelectedId] = useState<number | null>(null);
       const [isEditSheetOpen, setEditSheetOpen] = useState(false);
