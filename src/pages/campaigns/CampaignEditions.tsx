@@ -81,7 +81,7 @@ Welcome to this month's edition of our newsletter! We have some exciting updates
 - **Date:** YYYY-MM-DD
 - **Time:** HH:MM AM/PM
 - **Location:** [Venue or Link to Event]
-  
+
 [Short description of the event and a link for registration if applicable.]
 
 ---
@@ -113,10 +113,7 @@ Welcome to this month's edition of our newsletter! We have some exciting updates
 
 const CampaignEditions = () => {
   const { id } = useParams<{ id: string }>();
-
-  const [campaignEdition, setcampaignEdition] = useRecoilState(
-    campaignEditionByIdData
-  );
+  const [campaignEdition, setcampaignEdition] = useRecoilState(campaignEditionByIdData);
   const [isPreviewDialogOpen, setIsPreviewDialogOpen] = useState(false);
   const [editionToPreview, setEditionToPreview] = useState<number | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -124,14 +121,11 @@ const CampaignEditions = () => {
 
   useEffect(() => {
     document.title = "ACE | Campaign Editions";
-
     setcampaignEdition(tempData);
 
-    // implement API logic
-  }, [id]);
-
+    // Implement API logic if needed
+  }, []);
   const campaignContent = campaignEdition?.campaignContent || [];
-
   const navigate = useNavigate();
   
   const handleEditClick = (contentID: number) => {
@@ -149,10 +143,8 @@ const CampaignEditions = () => {
   };
 
   const handleDelete = (id: number) => {
-    const updatedContent = campaignContent.filter(
-      (edition) => edition.id !== id
-    );
-    setcampaignEdition((prev) => ({
+    const updatedContent = campaignContent.filter(edition => edition.id !== id);
+    setcampaignEdition(prev => ({
       ...prev,
       campaignContent: updatedContent,
     }));
@@ -170,29 +162,25 @@ const CampaignEditions = () => {
         </div>
         <div className="px-6">
           <div className="pb-2 flex justify-between items-center">
-            <div>
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/campaigns">Campaigns</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Editions</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-            <div>
-              <Button>
-                <Plus w-6 h-6 className="pr-2" />
-                Add
-              </Button>
-            </div>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/campaigns">Campaigns</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Editions</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <Button>
+              <Plus w-6 h-6 className="pr-2" />
+              Add
+            </Button>
           </div>
           <div className="border-border border-2 rounded-lg">
             <Table className="text-base">
@@ -209,29 +197,19 @@ const CampaignEditions = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {campaignContent.map((edition) => (
+                {campaignContent.map(edition => (
                   <TableRow
                     key={edition.id}
-                    className={`max-h-10 h-10 ${
-                      edition.id % 2 === 0 ? "bg-[#101929]" : ""
-                    }`}
+                    className={`max-h-10 h-10 ${edition.id % 2 === 0 ? "bg-[#101929]" : ""}`}
                   >
-                    <TableCell className="pl-6 text-left">
-                      {edition.id}
-                    </TableCell>
+                    <TableCell className="pl-6 text-left">{edition.id}</TableCell>
                     <TableCell className="max-w-[30vw]">
                       {edition.content.length > 150
                         ? `${edition.content.substring(0, 150)}...`
                         : edition.content}
                     </TableCell>
                     <TableCell className="text-center">
-                      <Badge
-                        className={`text-center ${
-                          edition.status === Status.Draft
-                            ? "border-2 border-[#215c33] text-[#3fb950] bg-[#192f28]"
-                            : "border-2 border-[#5e4b8b] text-[#ab7df8] bg-[#2b2a43]"
-                        }`}
-                      >
+                      <Badge className={`text-center ${edition.status === Status.Draft ? "border-2 border-[#215c33] text-[#3fb950] bg-[#192f28]" : "border-2 border-[#5e4b8b] text-[#ab7df8] bg-[#2b2a43]"}`}>
                         {edition.status}
                       </Badge>
                     </TableCell>
@@ -246,11 +224,7 @@ const CampaignEditions = () => {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button
-                              variant="outline"
-                              onClick={() => handleEditClick(edition.id)}
-                              className="border border-muted p-2 mx-1 rounded-lg"
-                            >
+                            <Button variant="outline" onClick={() => handleEditClick(edition.id)} className="border border-muted p-2 mx-1 rounded-lg">
                               <Edit w-5 h-5 color="#3b82f6" />
                             </Button>
                           </TooltipTrigger>
@@ -258,11 +232,7 @@ const CampaignEditions = () => {
                         </Tooltip>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button
-                              variant="outline"
-                              onClick={() => handlePreviewClick(edition.id)}
-                              className="border border-muted p-2 mx-1 rounded-lg"
-                            >
+                            <Button variant="outline" onClick={() => handlePreviewClick(edition.id)} className="border border-muted p-2 mx-1 rounded-lg">
                               <Eye w-5 h-5 color="#3b82f6" />
                             </Button>
                           </TooltipTrigger>
@@ -270,11 +240,7 @@ const CampaignEditions = () => {
                         </Tooltip>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button
-                              variant="outline"
-                              onClick={() => handleDeleteClick(edition.id)}
-                              className="border border-muted p-2 mx-1 rounded-lg"
-                            >
+                            <Button variant="outline" onClick={() => handleDeleteClick(edition.id)} className="border border-muted p-2 mx-1 rounded-lg">
                               <Trash2 w-5 h-5 color="#3b82f6" />
                             </Button>
                           </TooltipTrigger>
@@ -300,11 +266,7 @@ const CampaignEditions = () => {
             <PreviewDialog
               open={isPreviewDialogOpen}
               onOpenChange={setIsPreviewDialogOpen}
-              content={
-                campaignContent.find(
-                  (edition) => edition.id === editionToPreview
-                )?.content || "Nothing to preview"
-              }
+              content={campaignContent.find(edition => edition.id === editionToPreview)?.content || "Nothing to preview"}
             />
           </div>
         </div>
