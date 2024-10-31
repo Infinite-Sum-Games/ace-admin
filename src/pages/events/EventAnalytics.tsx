@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { eventListState, eventRegistrationState } from "@/atoms/eventState";
-import io from "socket.io-client";
+
 import { Button } from "@/components/ui/button";
 import {
   Search,
@@ -162,12 +162,6 @@ const EventAnalytics: React.FC = () => {
           : participant
       )
     );
-
-    const socket = io("http://localhost:4000");
-    socket.emit("updateParticipantStatus", {
-      id: participantId,
-      status: isCheckedIn ? "checked in" : "not checked in",
-    });
   };
 
   if (!event) {
