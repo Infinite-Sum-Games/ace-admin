@@ -150,37 +150,6 @@ const EventAnalytics: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Define how many items to show per page
 
-  useEffect(() => {
-    const socket = io("http://localhost:4000");
-
-    if (eventId) {
-      socket.emit("joinEvent", eventId);
-
-      socket.on("participantUpdate", (newParticipant: Participant) => {
-        setParticipants((prevParticipants) => [
-          ...prevParticipants,
-          newParticipant,
-        ]);
-      });
-
-      socket.on(
-        "updateParticipantStatus",
-        (updatedParticipant: Participant) => {
-          setParticipants((prevParticipants) =>
-            prevParticipants.map((participant) =>
-              participant.id === updatedParticipant.id
-                ? updatedParticipant
-                : participant
-            )
-          );
-        }
-      );
-    }
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [eventId]);
 
   const handleStatusChange = (participantId: string, isCheckedIn: boolean) => {
     setParticipants((prevParticipants) =>
