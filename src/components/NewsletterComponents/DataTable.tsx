@@ -22,8 +22,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { DataTablePagination } from "./tablePagination";
-import { YearFilter, StatusFilter, ResetFiltersButton } from "./DataTableFilters";
+import {
+  YearFilter,
+  StatusFilter,
+  ResetFiltersButton,
+} from "./DataTableFilters";
 import { useNavigate } from "react-router-dom";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -34,7 +39,9 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
 
   const table = useReactTable({
     data,
@@ -51,9 +58,15 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  console.log("Current Filters:", columnFilters);
+  console.log("Data:", data);
+
   const currentYear = new Date().getFullYear();
   const startYear = Math.max(2021, currentYear - 5);
-  const years = Array.from({ length: currentYear - startYear + 2 }, (_, i) => startYear + i);
+  const years = Array.from(
+    { length: currentYear - startYear + 2 },
+    (_, i) => startYear + i
+  );
   const statuses = ["Draft", "Published"];
 
   const handleYearFilterChange = (year: number) => {
@@ -76,7 +89,9 @@ export function DataTable<TData, TValue>({
   };
 
   const clearYearFilters = () => {
-    setColumnFilters((prev) => prev.filter((filter) => filter.id !== "createdAt"));
+    setColumnFilters((prev) =>
+      prev.filter((filter) => filter.id !== "createdAt")
+    );
   };
 
   const selectedYears = columnFilters
@@ -88,6 +103,7 @@ export function DataTable<TData, TValue>({
       const filtered = prev.filter((filter) => filter.id !== "status");
       return [...filtered, { id: "status", value: status }];
     });
+    console.log("Updated Filters:", columnFilters);
   };
 
   const clearStatusFilters = () => {
@@ -101,7 +117,7 @@ export function DataTable<TData, TValue>({
 
   const navigate = useNavigate();
 
-   function addCampaign() {
+  function addCampaign() {
     navigate("/campaigns/new");
   }
 
@@ -110,7 +126,9 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-between pb-4">
         <Input
           placeholder="Search by title"
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("campaignTitle")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
@@ -118,7 +136,7 @@ export function DataTable<TData, TValue>({
         />
         <div className="flex items-center mr-2">
           <div className="mr-2">
-            <ResetFiltersButton resetAllFilters={resetAllFilters}/>
+            <ResetFiltersButton resetAllFilters={resetAllFilters} />
           </div>
           <div className="mr-2">
             <StatusFilter
@@ -153,9 +171,11 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header, index) => (
-                  <TableHead 
-                    key={header.id} 
-                    className={index === 0 ? "w-[60px] pr-0" : index === 1 ? "pl-0" : ""}
+                  <TableHead
+                    key={header.id}
+                    className={
+                      index === 0 ? "w-[60px] pr-0" : index === 1 ? "pl-0" : ""
+                    }
                   >
                     {header.isPlaceholder
                       ? null
@@ -177,14 +197,14 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell, cellIndex) => (
-                    <TableCell 
-                      key={cell.id} 
+                    <TableCell
+                      key={cell.id}
                       className={
-                        cellIndex === 0 
-                          ? "py-0 pr-0 w-[60px]" 
-                          : cellIndex === 1 
-                            ? "py-0 pl-0" 
-                            : "py-0"
+                        cellIndex === 0
+                          ? "py-0 pr-0 w-[60px]"
+                          : cellIndex === 1
+                          ? "py-0 pl-0"
+                          : "py-0"
                       }
                     >
                       {flexRender(
@@ -197,7 +217,10 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-14 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-14 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
