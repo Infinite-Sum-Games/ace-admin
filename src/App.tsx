@@ -15,7 +15,7 @@ import CampaignsPage from './pages/campaigns/CampaignsPage'
 import NewCampaign from './pages/campaigns/NewCampaign'
 import CampaignEditions from './pages/campaigns/CampaignEditions'
 import NewEvent from './pages/events/NewEvent'
-import { EventAnalytics } from './pages/events/EventAnalytics' 
+import EventAnalytics from './pages/events/EventAnalytics'
 import EditCampaignContent from './pages/campaigns/EditCampaignContent'
 
 function App() {
