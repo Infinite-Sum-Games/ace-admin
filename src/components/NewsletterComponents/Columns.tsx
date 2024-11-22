@@ -7,7 +7,7 @@ import {
   ArrowUpDown,
   BookText,
 } from "lucide-react"
-import { useRecoilState } from "recoil"
+import { useSetRecoilState } from "recoil"
 import { useState } from "react"
 import { Button } from "../ui/button"
 import { TableCell } from "../ui/table"
@@ -111,7 +111,7 @@ export const columns: ColumnDef<Newsletter>[] = [
         const isDraft = new Date(latestContent.scheduledOn) > new Date()
         status = isDraft ? Status.Draft : latestContent.status
       } else {
-        status = Status.Draft // Default to Draft if no content
+        status = Status.Draft 
       }
 
       return (
@@ -169,7 +169,7 @@ export const columns: ColumnDef<Newsletter>[] = [
     accessorKey: "actions",
     header: () => <div className="text-right pr-4">Actions</div>,
     cell: ({ row }) => {
-      const [, setData] = useRecoilState(campaignData)
+      const setData = useSetRecoilState(campaignData)
       const [isDialogOpen, setDialogOpen] = useState(false)
       const [selectedId, setSelectedId] = useState<string | null>(null)
       const [isEditDialogOpen, setEditDialogOpen] = useState(false)

@@ -31,7 +31,6 @@ const EventFilter: React.FC = () => {
   const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
   const [activeTab, setActiveTab] = useRecoilState(activeTabState);
   const [selectedYear, setSelectedYear] = useRecoilState(yearFilterState);
-  const [isFormOpen, setIsFormOpen] = useState(false); // State to manage form visibility
   const Navigate = useNavigate();
   const clearFilter = () => {
     setFilter('');
@@ -60,14 +59,6 @@ const EventFilter: React.FC = () => {
 
   const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedYear(Number(e.target.value));
-  };
-
-  const handleAddEventClick = () => {
-    setIsFormOpen(true); // Open the CreateEventForm
-  };
-
-  const handleCloseForm = () => {
-    setIsFormOpen(false); // Close the CreateEventForm
   };
 
   return (

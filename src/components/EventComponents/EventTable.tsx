@@ -1,11 +1,27 @@
 import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { filteredEventListState,selectedDateState,yearFilterState,} from "@/atoms/eventState";
+import {
+  filteredEventListState,
+  selectedDateState,
+  yearFilterState,
+} from "@/atoms/eventState";
 import { EventType } from "@/types/type";
-import {Table,TableBody,TableHead,TableHeader,TableRow,TableCell} from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableCell,
+} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Info, Edit } from "lucide-react";
-import {Tooltip,TooltipContent,TooltipProvider,TooltipTrigger,}from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useNavigate } from "react-router-dom";
 
 interface EventsTableProps {
@@ -37,10 +53,6 @@ const EventsTable: React.FC<EventsTableProps> = ({ eventType }) => {
     setIsModalOpen(true); // Open the modal when editing an event
   };
 
-  const handleCloseModal = () => {
-    setEditEventId(null);
-    setIsModalOpen(false); // Close the modal
-  };
   const Navigate = useNavigate();
   return (
     <>
@@ -141,13 +153,15 @@ const EventsTable: React.FC<EventsTableProps> = ({ eventType }) => {
                         <TooltipTrigger>
                           <button
                             className="text-blue-600 hover:text-blue-800 mx-2"
-                            onClick={() => Navigate("/events/analytics")}
+                            onClick={() =>
+                              Navigate(`/events/analytics/${event.id}`)
+                            }
                           >
                             <Eye className="w-6 h-6" />
                           </button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>View Event</p>
+                          <p>Event Analytics</p>
                         </TooltipContent>
                       </Tooltip>
 
