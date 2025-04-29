@@ -33,7 +33,7 @@ const EventsTable: React.FC<EventsTableProps> = ({ eventType }) => {
   const [selectedYear, setSelectedYear] = useRecoilState(yearFilterState);
   const allEvents = useRecoilValue(filteredEventListState);
   const [editEventId, setEditEventId] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredEventsYear = selectedYear
     ? allEvents.filter((event) => {
@@ -50,90 +50,74 @@ const EventsTable: React.FC<EventsTableProps> = ({ eventType }) => {
 
   const handleEdit = (id: string) => {
     setEditEventId(id);
-    setIsModalOpen(true); // Open the modal when editing an event
+    setIsModalOpen(true);
   };
 
   const Navigate = useNavigate();
-  return (
-    <>
-      <div>
-        <Table className="border-2 border-gray-800 rounded-2xl">
-          <TableHeader>
-            <TableRow className="h-20">
-              <TableHead className="w-1/12 text-center py-4 text-gray text-lg">
-                ID
-              </TableHead>
-              <TableHead className="w-1/12 text-center py-4 text-gray text-lg">
-                Title
-              </TableHead>
-              <TableHead className="w-2/12 text-center py-4 text-gray text-lg">
-                Venue
-              </TableHead>
-              <TableHead className="w-2/12 text-center py-4 text-gray text-lg">
-                Cost
-              </TableHead>
-              <TableHead className="w-2/12 text-center py-4 text-gray text-lg">
-                Start
-              </TableHead>
-              <TableHead className="w-2/12 text-center py-4 text-gray text-lg">
-                Status
-              </TableHead>
-              <TableHead className="w-1/12 text-center py-4 text-gray text-lg">
-                Actions
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredEvents.length > 0 ? (
-              filteredEvents.map((event, index) => (
-                <TableRow
-                  key={event.id}
-                  className={index % 2 === 0 ? "bg-accent" : ""}
-                >
-                  <TableCell className="w-1/12 text-center py-8 text-m">
-                    {event.id}
-                  </TableCell>
-                  <TableCell className="w-2/12 text-center py-8 text-m">
-                    <div className="font-medium">{event.title}</div>
-                  </TableCell>
-                  <TableCell className="w-2/12 text-center py-8 text-m">
-                    {event.venue}
-                  </TableCell>
-                  <TableCell className="w-2/12 text-center py-8 text-m">
-                    <Badge
-                      className={`text-xs border-2 ${
-                        event.cost === "Paid"
-                          ? "border-[#5e4b8b] text-[#ab7df8] bg-[#2b2a43]"
-                          : "border-[#a6a6a6] text-[#a6a6a6] bg-accent"
-                      }`}
-                      variant="secondary"
-                    >
-                      {event.cost === "Paid" ? "Paid" : "Free"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="w-2/12 text-center py-8 text-m">
-                    {event.start}
-                  </TableCell>
-                  <TableCell className="w-2/12 text-center py-8 text-m">
-                    <Badge
-                      className={`w-20 h-8 text-xs rounded-full ${
-                        event.status === "completed"
-                          ? "border-2 border-[#215c33] text-[#3fb950] bg-[#192f28] text-center "
-                          : event.status === "ongoing"
-                          ? "border-2 border-[#254f88] text-[#4493f8] bg-[#192639] text-center w-16 h-8"
-                          : event.status === "upcoming"
-                          ? "border-2 border-[#674c17] text-[#d29922] bg-[#2e2a1f] text-center"
-                          : event.status === "drafts"
-                          ? "border-2 border-[#6c6c6c] text-[#b3b3b3] bg-[#2f2f2f] text-center w-14 h-8"
-                          : "bg-gray-200 text-gray-800 text-center"
-                      }`}
-                      variant="secondary"
-                    >
-                      {event.status}
-                    </Badge>
-                  </TableCell>
 
-                  <TableCell className="w-1/12 py-8 text-center text-m flex justify-around">
+  return (
+    <div>
+      <Table className="border-2 border-gray-800 rounded-xl text-sm">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[5%] text-center py-2">ID</TableHead>
+            <TableHead className="w-[15%] text-center py-2">Title</TableHead>
+            <TableHead className="w-[15%] text-center py-2">Venue</TableHead>
+            <TableHead className="w-[10%] text-center py-2">Cost</TableHead>
+            <TableHead className="w-[15%] text-center py-2">Start</TableHead>
+            <TableHead className="w-[15%] text-center py-2">Status</TableHead>
+            <TableHead className="w-[10%] text-center py-2">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((event, index) => (
+              <TableRow
+                key={event.id}
+                className={index % 2 === 0 ? "bg-accent" : ""}
+              >
+                <TableCell className="text-center py-6">{event.id}</TableCell>
+                <TableCell className="text-center py-2 font-medium">
+                  {event.title}
+                </TableCell>
+                <TableCell className="text-center py-6">
+                  {event.venue}
+                </TableCell>
+                <TableCell className="text-center py-2">
+                  <Badge
+                    className={`text-xs border-2 ${
+                      event.cost === "Paid"
+                        ? "border-[#5e4b8b] text-[#ab7df8] bg-[#2b2a43]"
+                        : "border-[#a6a6a6] text-[#a6a6a6] bg-accent"
+                    }`}
+                    variant="secondary"
+                  >
+                    {event.cost}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-center py-6">
+                  {event.start}
+                </TableCell>
+                <TableCell className="text-center py-6">
+                  <Badge
+                    className={`w-fit px-3 py-1 text-xs rounded-full ${
+                      event.status === "completed"
+                        ? "border-2 border-[#215c33] text-[#3fb950] bg-[#192f28]"
+                        : event.status === "ongoing"
+                        ? "border-2 border-[#254f88] text-[#4493f8] bg-[#192639]"
+                        : event.status === "upcoming"
+                        ? "border-2 border-[#674c17] text-[#d29922] bg-[#2e2a1f]"
+                        : event.status === "drafts"
+                        ? "border-2 border-[#6c6c6c] text-[#b3b3b3] bg-[#2f2f2f]"
+                        : "bg-gray-200 text-gray-800"
+                    }`}
+                    variant="secondary"
+                  >
+                    {event.status}
+                  </Badge>
+                </TableCell>
+                <TableCell className="py-6 text-center">
+                  <div className="flex justify-center gap-2">
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger>
@@ -141,7 +125,7 @@ const EventsTable: React.FC<EventsTableProps> = ({ eventType }) => {
                             onClick={() => handleEdit(event.id)}
                             className="text-blue-600 hover:text-blue-800"
                           >
-                            <Edit className="w-6 h-6" />
+                            <Edit className="w-5 h-5" />
                           </button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -152,12 +136,12 @@ const EventsTable: React.FC<EventsTableProps> = ({ eventType }) => {
                       <Tooltip>
                         <TooltipTrigger>
                           <button
-                            className="text-blue-600 hover:text-blue-800 mx-2"
                             onClick={() =>
                               Navigate(`/events/analytics/${event.id}`)
                             }
+                            className="text-blue-600 hover:text-blue-800"
                           >
-                            <Eye className="w-6 h-6" />
+                            <Eye className="w-5 h-5" />
                           </button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -168,7 +152,7 @@ const EventsTable: React.FC<EventsTableProps> = ({ eventType }) => {
                       <Tooltip>
                         <TooltipTrigger>
                           <button className="text-blue-600 hover:text-blue-800">
-                            <Info className="w-6 h-6" />
+                            <Info className="w-5 h-5" />
                           </button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -176,20 +160,20 @@ const EventsTable: React.FC<EventsTableProps> = ({ eventType }) => {
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center py-4">
-                  No events found
+                  </div>
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-    </>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={7} className="text-center py-4">
+                No events found
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
