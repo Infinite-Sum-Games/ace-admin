@@ -8,8 +8,8 @@ const EventsPage = () => {
 
   return (
     <div className="min-h-screen flex bg-[hsl(var(--background))] text-[hsl(var(--foreground))] text-white">
-      <Sidebar /> {/* Placing Sidebar here on the left side */}
-      <div className="flex-1 flex flex-col p-8"> {/* Using flex-1 to take the remaining space */}
+      <Sidebar />
+      <div className="flex-1 flex flex-col p-8">
         <div className="text-center mb-3 sm:mb-4">
           <h1 className="text-3xl sm:text-6xl font-bold text-le text-left">Events</h1>
 

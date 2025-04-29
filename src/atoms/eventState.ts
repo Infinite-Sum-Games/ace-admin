@@ -27,7 +27,7 @@ export const eventRegistrationState = atom<EventRegistration[]>({
       eventTitle: 'Event 1',
       registeredParticipants: [
         { id: '101', ticketid: '3030', name: 'Participant1', email: 'alice@example.com', status: 'checked in', department: 'CSE', registeredDate: '2024-09-26' },
-        { id: '102', ticketid: '3030', name: 'Participant2', email: 'bob@example.com', status: 'not checked in', department: 'EEE', registeredDate: '2024-09-26' },
+        { id: 'usr_123456', ticketid: '3030', name: 'Participant2', email: 'bob@example.com', status: 'not checked in', department: 'EEE', registeredDate: '2024-09-26' },
         { id: '103', ticketid: '3030', name: 'Participant3', email: 'alice@example.com', status: 'checked in', department: 'MEE', registeredDate: '2024-09-27' },
         { id: '105', ticketid: '3030', name: 'Participant4', email: 'bob@example.com', status: 'not checked in', department: 'CSE', registeredDate: '2024-09-26' },
         { id: '106', ticketid: '3030', name: 'Participant5', email: 'alice@example.com', status: 'checked in', department: 'CSE', registeredDate: '2024-09-27' },

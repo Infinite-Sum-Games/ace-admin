@@ -73,6 +73,7 @@ interface Participant {
 
 import Sidebar from "@/components/Sidebar";
 import { RegistrationLineChart } from "@/components/EventComponents/RegistrationLineChart";
+import {QrReader} from "react-qr-reader"
 const MyRadialBarChartComponent = () => {
   // Assuming you have `registeredCount` and `checkedInCount` available from props, state, or API
   const registeredCount = 100; // replace with actual value or state
@@ -150,6 +151,12 @@ const EventAnalytics: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Define how many items to show per page
 
+  const [showScanner, setShowScanner] = useState(false);
+  const [scannedData, setScannedData] = useState<string | null>(null);
+const [parsedQR, setParsedQR] = useState<{ participantId: string; eventId: string } | null>(null);
+
+
+
 
   const handleStatusChange = (participantId: string, isCheckedIn: boolean) => {
     setParticipants((prevParticipants) =>
@@ -163,6 +170,23 @@ const EventAnalytics: React.FC = () => {
       )
     );
   };
+  const handleScan = (data: string | null) => {
+    if (data) {
+      const participantId = data.trim();
+      const participantExists = participants.some((p) => p.id === participantId);
+      if (participantExists) {
+        handleStatusChange(participantId, true); // Mark as "checked in"
+        setShowScanner(false); // Hide scanner after successful scan
+      } else {
+        alert("❌ Participant not found for scanned ID: " + participantId);
+      }
+    }
+  };
+  
+  const handleError = (err: any) => {
+    console.error("QR Scan Error:", err);
+  };
+  
 
   if (!event) {
     return <div className="text-white">Event not found</div>;
@@ -399,6 +423,67 @@ const EventAnalytics: React.FC = () => {
                   >
                     <ChevronRight className="w-5 h-5" />
                   </Button>
+                  <button
+  onClick={() => setShowScanner((prev) => !prev)}
+  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+>
+  {showScanner ? "Close QR Scanner" : "Scan QR to Check-in"}
+</button>
+{showScanner && (
+  <div className="relative w-full max-w-sm mx-auto">
+  <QrReader
+  constraints={{ facingMode: "environment" }}
+  onResult={(result, error) => {
+    if (result?.getText()) {
+      const text = result.getText();
+      setScannedData(text);
+
+      const [participantId, eventId] = text.split(":");
+      if (participantId && eventId) {
+        const participantExists = participants.some((p) => p.id === participantId);
+        if (participantExists) {
+          setParsedQR({ participantId, eventId });
+          handleStatusChange(participantId, true);
+          alert(`✅ ${participantId} has been checked in successfully!`);
+
+        } else {
+          alert("❌ Participant not found for scanned ID: " + participantId);
+        }
+      } else {
+        alert("❌ Invalid QR format. Expected: participantId:eventId");
+        setParsedQR(null);
+      }
+    }
+  }}
+  scanDelay={300}
+  containerStyle={{ width: "100%" }}
+  videoContainerStyle={{ width: "100%" }}
+  videoStyle={{ width: "100%" }}
+/>
+
+  {/* Overlay square */}
+
+  <div className="absolute top-1/2 left-1/2 w-40 h-40 border-4 border-blue-500 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+  {parsedQR && (
+  <div className="mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg text-black">
+    <h3 className="text-lg font-semibold mb-2">Scanned QR Details</h3>
+    <p><strong>Participant ID:</strong> {parsedQR.participantId}</p>
+    <p><strong>Event ID:</strong> {parsedQR.eventId}</p>
+  </div>
+)}
+
+{!parsedQR && scannedData && (
+  <div className="mt-4 p-4 bg-red-100 border border-red-300 rounded-lg text-red-800">
+    <p>Invalid QR format. Expected format: <code>participantId:eventId</code></p>
+    <p>Scanned value: {scannedData}</p>
+  </div>
+)}
+
+
+</div>
+
+)}
+
                 </div>
               </div>
             </TabsContent>
