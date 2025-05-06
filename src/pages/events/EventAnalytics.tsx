@@ -74,6 +74,7 @@ interface Participant {
 import Sidebar from "@/components/Sidebar";
 import { RegistrationLineChart } from "@/components/EventComponents/RegistrationLineChart";
 import { QrReader } from "react-qr-reader";
+import { useEventStore } from "@/stores/EventStore";
 const MyRadialBarChartComponent = () => {
   // Assuming you have `registeredCount` and `checkedInCount` available from props, state, or API
   const registeredCount = 100; // replace with actual value or state
@@ -117,8 +118,9 @@ const EventAnalytics: React.FC = () => {
     null
   );
   const { eventId } = useParams();
-  const events = useRecoilValue(eventListState);
-  const eventRegistrations = useRecoilValue(eventRegistrationState);
+  const events = useEventStore((state) => state.eventList);
+const eventRegistrations = useEventStore((state) => state. eventRegistrations); // replace with correct field if different
+
 
   const event = events.find((e) => e.id === eventId);
   const registration = eventRegistrations.find(
@@ -486,6 +488,8 @@ const EventAnalytics: React.FC = () => {
               </div>
             </TabsContent>
           </div>
+
+          
           <TabsContent
             value="analytics"
             className="bg-[hsl(var(--background))] min-h-screen"

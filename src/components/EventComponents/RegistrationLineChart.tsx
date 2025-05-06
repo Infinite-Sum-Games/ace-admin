@@ -2,6 +2,7 @@ import { useRecoilValue } from 'recoil';
 import { eventRegistrationState } from '@/atoms/eventState'; // Adjust this path as needed
 import { LineChart, Line, XAxis, CartesianGrid, Tooltip } from 'recharts';
 import { ChartContainer } from '../ui/chart';
+import { useEventStore } from '@/stores/EventStore';
 
 // Define the ChartConfig interface with an index signature
 interface ChartConfig {
@@ -30,7 +31,7 @@ interface RegistrationLineChartProps {
 // Render the Line Chart
 export function RegistrationLineChart({ eventId }: RegistrationLineChartProps) {
   // Get the participants from the specific event in the state
-  const eventRegistration = useRecoilValue(eventRegistrationState);
+  const eventRegistration = useEventStore((state) => state.eventRegistrations);
   
   // Find the specific event by eventId
   const event = eventRegistration.find(e => e.eventId === eventId);
