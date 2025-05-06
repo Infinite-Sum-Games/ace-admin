@@ -1,13 +1,4 @@
 import React from 'react';
-import { useRecoilState } from 'recoil';
-import {
-  eventCostFilterState,
-  eventDateFilterState,
-  eventFilterState,
-  activeTabState,
-  selectedDateState,
-  yearFilterState,
-} from '@/atoms/eventState';
 import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
@@ -17,50 +8,74 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
-import { Filter, Search, Calendar, Tag } from 'lucide-react';
+import { Filter, Search, Calendar, Tag, List, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { List } from 'lucide-react';
-import { Plus } from 'lucide-react';
 import DatePicker from './DatePicker';
 import { useNavigate } from 'react-router-dom';
 import { useEventStore } from '@/stores/EventStore';
 
 const EventFilter: React.FC = () => {
-  const [filter, setFilter] = useRecoilState(eventFilterState);
-  const [costFilter, setCostFilter] = useRecoilState(eventCostFilterState);
-  const [dateFilter, setDateFilter] = useRecoilState(eventDateFilterState);
-  const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
-  const [activeTab, setActiveTab] = useRecoilState(activeTabState);
-  const [selectedYear, setSelectedYear] = useRecoilState(yearFilterState);
-  const Navigate = useNavigate();
+  const {
+    eventFilter,
+    setEventFilter,
+    eventCostFilter,
+    setEventCostFilter,
+    eventDateFilter,
+    setEventDateFilter,
+    selectedDate,
+    setSelectedDate,
+    activeTab,
+    setActiveTab,
+    yearFilter,
+    setYearFilter,
+  } = useEventStore();
+
+  const navigate = useNavigate();
+
   const clearFilter = () => {
-    setFilter('');
-    setCostFilter('');
-    setDateFilter('');
+    setEventFilter('');
+    setEventCostFilter('');
+    setEventDateFilter('');
     setSelectedDate('');
     setActiveTab('all');
-    setSelectedYear(new Date().getFullYear());
+    setYearFilter(new Date().getFullYear());
+    console.log('Filters cleared');
   };
 
   const handleCostFilterChange = (value: string) => {
-    setCostFilter((prev) => (prev === value ? '' : value));
+    console.log('Cost filter changed to:', value);
+    setEventCostFilter(value);
   };
 
   const handleDateFilterChange = (value: string) => {
-    setDateFilter(value);
+    console.log('Date filter changed to:', value);
+    setEventDateFilter(value);
   };
 
   const handleStatusFilterChange = (value: string) => {
+    console.log('Status filter changed to:', value);
     setActiveTab(value);
   };
 
   const handleDateSelection = (date: string) => {
+    console.log('Date selected:', date);
     setSelectedDate(date);
   };
 
   const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(Number(e.target.value));
+    console.log('Year filter changed to:', e.target.value);
+    setYearFilter(Number(e.target.value));
   };
+
+  // Log current filter values
+  console.log('Current Filters:', {
+    eventFilter,
+    eventCostFilter,
+    eventDateFilter,
+    selectedDate,
+    activeTab,
+    yearFilter,
+  });
 
   return (
     <div className="space-y-4 mb-4">
@@ -70,23 +85,23 @@ const EventFilter: React.FC = () => {
           <Input
             type="text"
             placeholder="Search Events"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            value={eventFilter}
+            onChange={(e) => {
+              console.log('Search input changed:', e.target.value);
+              setEventFilter(e.target.value);
+            }}
             className="w-[400px] px-6 py-5 bg-gray-800 text-white border border-gray-600 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out text-lg pl-10"
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
 
         <div className="flex items-center space-x-2 border border-gray-600 rounded-lg bg-gray-800 px-4 py-2 w-fit">
-          {/* Lucide React Calendar Icon */}
           <Calendar className="text-white w-5 h-5" />
-          {/* Select Dropdown */}
           <select
-            value={selectedYear}
+            value={yearFilter}
             onChange={handleYearChange}
             className="bg-transparent text-white border-none focus:ring-0 outline-none px-2 cursor-pointer"
           >
-            {/* Render years from 2018 to the current year */}
             {[...Array(new Date().getFullYear() - 2017)].map((_, index) => (
               <option
                 key={index}
@@ -99,7 +114,7 @@ const EventFilter: React.FC = () => {
           </select>
         </div>
 
-        {/* DatePicker Component */}
+        {/* Date Picker */}
         <div className="flex items-center space-x-2">
           <DatePicker selectedDate={selectedDate} onDateChange={handleDateSelection} />
         </div>
@@ -114,7 +129,7 @@ const EventFilter: React.FC = () => {
           </Button>
         </div>
 
-        {/* Dropdown Menu for Filters */}
+        {/* Filter Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
@@ -127,36 +142,51 @@ const EventFilter: React.FC = () => {
 
             {/* Cost Filter */}
             <DropdownMenuCheckboxItem
-              checked={costFilter === ''}
-              onCheckedChange={() => handleCostFilterChange('')}
+              checked={eventCostFilter === ''}
+              onCheckedChange={() => {
+                console.log('Cost filter toggle: All');
+                handleCostFilterChange('');
+              }}
             >
               <Tag size={16} className="mr-2" /> Cost: All
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
-              checked={costFilter === 'Free'}
-              onCheckedChange={() => handleCostFilterChange('Free')}
+              checked={eventCostFilter === 'Free'}
+              onCheckedChange={() => {
+                console.log('Cost filter toggle: Free');
+                handleCostFilterChange('Free');
+              }}
             >
               <Tag size={16} className="mr-2" /> Cost: Free
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
-              checked={costFilter === 'Paid'}
-              onCheckedChange={() => handleCostFilterChange('Paid')}
+              checked={eventCostFilter === 'Paid'}
+              onCheckedChange={() => {
+                console.log('Cost filter toggle: Paid');
+                handleCostFilterChange('Paid');
+              }}
             >
               <Tag size={16} className="mr-2" /> Cost: Paid
             </DropdownMenuCheckboxItem>
 
             <DropdownMenuSeparator />
 
-            {/* Date Filters: Upcoming, Past */}
+            {/* Date Filter */}
             <DropdownMenuCheckboxItem
-              checked={dateFilter === 'upcoming'}
-              onCheckedChange={() => handleDateFilterChange(dateFilter === 'upcoming' ? '' : 'upcoming')}
+              checked={eventDateFilter === 'upcoming'}
+              onCheckedChange={() => {
+                console.log('Date filter toggle: Upcoming');
+                handleDateFilterChange(eventDateFilter === 'upcoming' ? '' : 'upcoming');
+              }}
             >
               <Calendar size={16} className="mr-2 mb-2 text-gray-400" /> Date: Upcoming
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
-              checked={dateFilter === 'past'}
-              onCheckedChange={() => handleDateFilterChange(dateFilter === 'past' ? '' : 'past')}
+              checked={eventDateFilter === 'past'}
+              onCheckedChange={() => {
+                console.log('Date filter toggle: Past');
+                handleDateFilterChange(eventDateFilter === 'past' ? '' : 'past');
+              }}
             >
               <Calendar size={16} className="mr-2 mb-2 text-gray-400" /> Date: Past
             </DropdownMenuCheckboxItem>
@@ -166,25 +196,37 @@ const EventFilter: React.FC = () => {
             {/* Status Filter */}
             <DropdownMenuCheckboxItem
               checked={activeTab === 'all'}
-              onCheckedChange={() => handleStatusFilterChange('all')}
+              onCheckedChange={() => {
+                console.log('Status filter toggle: All');
+                handleStatusFilterChange('all');
+              }}
             >
               <List size={16} className="mr-2" /> Status: All
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
               checked={activeTab === 'ongoing'}
-              onCheckedChange={() => handleStatusFilterChange('ongoing')}
+              onCheckedChange={() => {
+                console.log('Status filter toggle: Ongoing');
+                handleStatusFilterChange('ongoing');
+              }}
             >
               <List size={16} className="mr-2" /> Status: Ongoing
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
               checked={activeTab === 'completed'}
-              onCheckedChange={() => handleStatusFilterChange('completed')}
+              onCheckedChange={() => {
+                console.log('Status filter toggle: Completed');
+                handleStatusFilterChange('completed');
+              }}
             >
               <List size={16} className="mr-2" /> Status: Completed
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
               checked={activeTab === 'drafts'}
-              onCheckedChange={() => handleStatusFilterChange('drafts')}
+              onCheckedChange={() => {
+                console.log('Status filter toggle: Drafts');
+                handleStatusFilterChange('drafts');
+              }}
             >
               <List size={16} className="mr-2" /> Status: Drafts
             </DropdownMenuCheckboxItem>
@@ -193,14 +235,14 @@ const EventFilter: React.FC = () => {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Add Button on the rightmost end */}
+        {/* Add Event Button */}
         <div>
           <Button
             variant="default"
             className="w-24 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition duration-150 ease-in-out"
-            onClick={()=>Navigate('/events/new')} // Open the CreateEventForm on click
+            onClick={() => navigate('/events/new')}
           >
-            <Plus className='mr-2'/>
+            <Plus className="mr-2" />
             Add
           </Button>
         </div>

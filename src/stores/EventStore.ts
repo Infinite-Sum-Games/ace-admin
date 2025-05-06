@@ -143,32 +143,28 @@ export const useEventStore = create<EventStore>((set, get) => ({
       eventFilter,
       eventCostFilter,
       eventDateFilter,
-      yearFilter,
-      selectedDate,
+      activeTab,
     } = get();
   
-    return eventList.filter((event) => {
-      const matchesFilter =
-        !eventFilter || event.title.toLowerCase().includes(eventFilter.toLowerCase());
+    const currentDate = new Date();
   
-      const matchesCost =
-        !eventCostFilter || event.cost.toLowerCase() === eventCostFilter.toLowerCase();
+    return eventList.filter((event) => {
+      const matchesTitle = event.title.toLowerCase().includes(eventFilter.toLowerCase());
+      const matchesCost = !eventCostFilter || event.cost === eventCostFilter;
   
       const matchesDate =
-        !eventDateFilter || new Date(event.start).toISOString().split('T')[0] === eventDateFilter;
+        !eventDateFilter ||
+        (eventDateFilter === 'past' && new Date(event.start) < currentDate) ||
+        (eventDateFilter === 'upcoming' && new Date(event.start) >= currentDate);
   
-      const matchesYear = event.start.startsWith(String(yearFilter));
-      const matchesSelectedDate =
-        !selectedDate || event.start === selectedDate;
+      const matchesStatus =
+        activeTab === 'all' ||
+        (activeTab === 'ongoing' && event.status === 'ongoing') ||
+        (activeTab === 'completed' && event.status === 'completed') ||
+        (activeTab === 'drafts' && event.status === 'drafts');
   
-      return (
-        matchesFilter &&
-        matchesCost &&
-        matchesDate &&
-        matchesYear &&
-        matchesSelectedDate
-      );
+      return matchesTitle && matchesCost && matchesDate && matchesStatus;
     });
-  },
+  }  
   
 }));

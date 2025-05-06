@@ -79,7 +79,7 @@ const Sidebar = () => {
             <div key={index} className="my-4 mx-1">
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
+                  <TooltipTrigger asChild>
                     <Button onClick={() => navigate(item.link)} size="icon" variant="outline" className="border-0">
                       {item.icon}
                     </Button>
@@ -95,7 +95,7 @@ const Sidebar = () => {
           {/* TODO: Profile pictures can be an add-on for later versions */}
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <ModeToggleButton />
               </TooltipTrigger>
               <TooltipContent side="right">Toggle Theme</TooltipContent>
@@ -111,7 +111,7 @@ const Sidebar = () => {
             </Tooltip>
             {/* Logout */}
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button onClick={logoutHandler} size="icon" variant="outline" className="border-0" >
                   <LogOut color="#c42a21" />
                 </Button>

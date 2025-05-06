@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  filteredEventListState,
-  selectedDateState,
-  yearFilterState,
-} from "@/atoms/eventState";
+import { useEventStore } from "@/stores/EventStore"; // import your zustand store
 import { EventType } from "@/types/type";
 import {
   Table,
@@ -29,23 +24,29 @@ interface EventsTableProps {
 }
 
 const EventsTable: React.FC<EventsTableProps> = ({ eventType }) => {
-  const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
-  const [selectedYear, setSelectedYear] = useRecoilState(yearFilterState);
-  const allEvents = useRecoilValue(filteredEventListState);
+  // Use zustand store for state management
+  const selectedDate = useEventStore((state) => state.selectedDate);
+  const selectedYear = useEventStore((state) => state.yearFilter);
+  const cost = useEventStore((state) => state.eventCostFilter);
+  const date = useEventStore((state) => state.eventDateFilter);
+  const allEvents = useEventStore((state) => state.filteredEventList);
+
   const [editEventId, setEditEventId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredEventsYear = selectedYear
-    ? allEvents.filter((event) => {
+    ? allEvents().filter((event) => {
         const eventYear = new Date(event.start).getFullYear();
         return eventYear === selectedYear;
       })
-    : allEvents;
+    : allEvents();
 
   const filteredEvents = filteredEventsYear.filter((event) => {
     const isMatchingDate = selectedDate ? event.start === selectedDate : true;
     const isMatchingStatus = event.status === eventType || eventType === "all";
-    return isMatchingDate && isMatchingStatus;
+    const isMatchingCost = cost ? event.cost === cost : true;
+    const isMatchindate= date ? event.status === date : true;
+    return isMatchingDate && isMatchingStatus &&isMatchindate && isMatchingCost
   });
 
   const handleEdit = (id: string) => {
