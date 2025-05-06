@@ -29,6 +29,7 @@ const EventsTable: React.FC<EventsTableProps> = ({ eventType }) => {
   const selectedYear = useEventStore((state) => state.yearFilter);
   const cost = useEventStore((state) => state.eventCostFilter);
   const date = useEventStore((state) => state.eventDateFilter);
+  const search = useEventStore((state) => state.eventFilter);
   const allEvents = useEventStore((state) => state.filteredEventList);
 
   const [editEventId, setEditEventId] = useState<string | null>(null);
