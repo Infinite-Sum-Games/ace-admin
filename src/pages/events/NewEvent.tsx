@@ -44,6 +44,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Save, MapPin } from "lucide-react";
+import { useMarkdownStore } from "@/stores/EventMarkdownStore";
 const formSchema = z.object({
   title: z
     .string()
@@ -93,8 +94,9 @@ export default function Component() {
 
   const [titleCount, setTitleCount] = useState("0/120");
   const [blurbCount, setBlurbCount] = useState("0/120");
-  const [content] = useRecoilState(EventmarkdownState);
-  const rawhtml = marked(content);
+  const content = useMarkdownStore((state) => state.markdown);
+
+  const rawhtml = marked(content) as string;
   const {
     register,
     handleSubmit,
