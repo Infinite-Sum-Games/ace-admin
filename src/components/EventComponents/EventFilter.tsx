@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useRecoilState } from 'recoil';
 import {
   eventCostFilterState,
@@ -21,8 +21,9 @@ import { Filter, Search, Calendar, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { List } from 'lucide-react';
 import { Plus } from 'lucide-react';
-import DatePicker from './DatePicker'; // Import the DatePicker component
+import DatePicker from './DatePicker';
 import { useNavigate } from 'react-router-dom';
+import { useEventStore } from '@/stores/EventStore';
 
 const EventFilter: React.FC = () => {
   const [filter, setFilter] = useRecoilState(eventFilterState);
