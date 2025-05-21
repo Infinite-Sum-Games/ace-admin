@@ -73,6 +73,8 @@ interface Participant {
 
 import Sidebar from "@/components/Sidebar";
 import { RegistrationLineChart } from "@/components/EventComponents/RegistrationLineChart";
+import { QrReader } from "react-qr-reader";
+import { useEventStore } from "@/stores/EventStore";
 const MyRadialBarChartComponent = () => {
   // Assuming you have `registeredCount` and `checkedInCount` available from props, state, or API
   const registeredCount = 100; // replace with actual value or state
@@ -116,8 +118,9 @@ const EventAnalytics: React.FC = () => {
     null
   );
   const { eventId } = useParams();
-  const events = useRecoilValue(eventListState);
-  const eventRegistrations = useRecoilValue(eventRegistrationState);
+  const events = useEventStore((state) => state.eventList);
+const eventRegistrations = useEventStore((state) => state. eventRegistrations); // replace with correct field if different
+
 
   const event = events.find((e) => e.id === eventId);
   const registration = eventRegistrations.find(
@@ -150,6 +153,12 @@ const EventAnalytics: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Define how many items to show per page
 
+  const [showScanner, setShowScanner] = useState(false);
+  const [scannedData, setScannedData] = useState<string | null>(null);
+  const [parsedQR, setParsedQR] = useState<{
+    participantId: string;
+    eventId: string;
+  } | null>(null);
 
   const handleStatusChange = (participantId: string, isCheckedIn: boolean) => {
     setParticipants((prevParticipants) =>
@@ -162,6 +171,24 @@ const EventAnalytics: React.FC = () => {
           : participant
       )
     );
+  };
+  const handleScan = (data: string | null) => {
+    if (data) {
+      const participantId = data.trim();
+      const participantExists = participants.some(
+        (p) => p.id === participantId
+      );
+      if (participantExists) {
+        handleStatusChange(participantId, true); // Mark as "checked in"
+        setShowScanner(false); // Hide scanner after successful scan
+      } else {
+        alert("❌ Participant not found for scanned ID: " + participantId);
+      }
+    }
+  };
+
+  const handleError = (err: any) => {
+    console.error("QR Scan Error:", err);
   };
 
   if (!event) {
@@ -277,92 +304,143 @@ const EventAnalytics: React.FC = () => {
                 </div>
                 {/* Event Title Heading */}
                 {/* Participants Table */}
-                <div className="border border-1 rounded border-gray-700 xl">
-                  {participants.length > 0 ? (
-                    <Table className="w-full text-[hsl(var(--foreground))]">
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-1/12 text-center font-semibold py-4">
-                            ParticipantID
-                          </TableHead>
-                          <TableHead className="w-3/12 text-center font-semibold py-4">
-                            Name
-                          </TableHead>
-                          <TableHead className="w-1/12 text-center font-semibold py-4">
-                            Ticket ID
-                          </TableHead>
-                          <TableHead className="w-1/8 text-center font-semibold py-4">
-                            Department
-                          </TableHead>
-                          <TableHead className="w-1/8 text-center font-semibold py-4">
-                            Status
-                          </TableHead>
-                          <TableHead className="w-1/8 text-center font-semibold py-4">
-                            Actions
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {currentParticipants.map((participant) => (
-                          <TableRow
-                            key={participant.id}
-                            className={`hover:bg-gray-700 transition duration-300 ${
-                              participant.status === "checked in"
-                                ? "bg-gray-800"
-                                : "bg-gray-900"
-                            }`}
-                          >
-                            <TableCell className="text-center py-4 px-6">
-                              {participant.id}
-                            </TableCell>
-                            <TableCell className="text-center py-4 px-6">
-                              {participant.name}
-                            </TableCell>
-                            <TableCell className="text-center py-4 px-6">
-                              {participant.ticketid}
-                            </TableCell>
-                            <TableCell className="text-center py-4 px-6">
-                              {participant.department}
-                            </TableCell>
-                            <TableCell className="text-center py-4 px-6">
-                              {participant.status === "checked in" ? (
-                                <span className="flex justify-center items-center text-green-500">
-                                  <CheckCircle className="mr-1" />
-                                  {participant.status}
-                                </span>
-                              ) : (
-                                <span className="flex justify-center items-center text-red-500">
-                                  <UserX className="mr-1" />
-                                  {participant.status}
-                                </span>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-center py-4 px-6">
-                              <label className="flex justify-center items-center space-x-2">
-                                <input
-                                  type="checkbox"
-                                  checked={participant.status === "checked in"}
-                                  onChange={(e) =>
-                                    handleStatusChange(
-                                      participant.id,
-                                      e.target.checked
-                                    )
-                                  }
-                                  className="h-4 w-4 rounded focus:ring-2 focus:ring-[hsl(var(--primary))] accent-[hsl(var(--primary))]"
-                                />
-                                <span>Checked In</span>
-                              </label>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  ) : (
-                    <p className="text-center text-gray-400">
-                      No participants yet
-                    </p>
-                  )}
-                </div>
+                {/* Main container for both the QR Scanner and Table */}
+<div className="relative mb-6">
+  {/* Show scanner UI ABOVE the table */}
+  {showScanner && (
+    <div className="absolute top-0 left-0 w-full h-full z-10 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="relative w-full max-w-sm mx-auto">
+        <QrReader
+          constraints={{ facingMode: "environment" }}
+          onResult={(result, error) => {
+            if (result?.getText()) {
+              const text = result.getText();
+              setScannedData(text);
+              const [participantId, eventId] = text.split(":");
+              if (participantId && eventId) {
+                const participantExists = participants.some((p) => p.id === participantId);
+                if (participantExists) {
+                  setParsedQR({ participantId, eventId });
+                  handleStatusChange(participantId, true);
+                  alert(`✅ ${participantId} has been checked in successfully!`);
+                } else {
+                  alert("❌ Participant not found for scanned ID: " + participantId);
+                }
+              } else {
+                alert("❌ Invalid QR format. Expected: participantId:eventId");
+                setParsedQR(null);
+              }
+            }
+          }}
+          scanDelay={300}
+          containerStyle={{ width: "100%" }}
+          videoContainerStyle={{ width: "100%" }}
+          videoStyle={{ width: "100%" }}
+        />
+
+        <div className="absolute top-1/2 left-1/2 w-48 h-48 border-4 border-blue-500 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+        {/* {parsedQR && (
+          <div className="mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg text-black">
+            <h3 className="text-lg font-semibold mb-2">Scanned QR Details</h3>
+            <p><strong>Participant ID:</strong> {parsedQR.participantId}</p>
+            <p><strong>Event ID:</strong> {parsedQR.eventId}</p>
+          </div>
+        )} */}
+
+        {/* {!parsedQR && scannedData && (
+          <div className="mt-4 p-4 bg-red-100 border border-red-300 rounded-lg text-red-800">
+            <p>Invalid QR format. Expected format: <code>participantId:eventId</code></p>
+            <p>Scanned value: {scannedData}</p>
+          </div>
+        )} */}
+      </div>
+    </div>
+  )}
+
+  {/* The table */}
+  <div className="border border-1 rounded border-gray-700 xl mt-10">
+    {participants.length > 0 ? (
+      <Table className="w-full text-[hsl(var(--foreground))]">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-1/12 text-center font-semibold py-4">
+              ParticipantID
+            </TableHead>
+            <TableHead className="w-3/12 text-center font-semibold py-4">
+              Name
+            </TableHead>
+            <TableHead className="w-1/12 text-center font-semibold py-4">
+              Ticket ID
+            </TableHead>
+            <TableHead className="w-1/8 text-center font-semibold py-4">
+              Department
+            </TableHead>
+            <TableHead className="w-1/8 text-center font-semibold py-4">
+              Status
+            </TableHead>
+            <TableHead className="w-1/8 text-center font-semibold py-4">
+              Actions
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {currentParticipants.map((participant) => (
+            <TableRow
+              key={participant.id}
+              className={`hover:bg-gray-700 transition duration-300 ${
+                participant.status === "checked in" ? "bg-gray-800" : "bg-gray-900"
+              }`}
+            >
+              <TableCell className="text-center py-4 px-6">
+                {participant.id}
+              </TableCell>
+              <TableCell className="text-center py-4 px-6">
+                {participant.name}
+              </TableCell>
+              <TableCell className="text-center py-4 px-6">
+                {participant.ticketid}
+              </TableCell>
+              <TableCell className="text-center py-4 px-6">
+                {participant.department}
+              </TableCell>
+              <TableCell className="text-center py-4 px-6">
+                {participant.status === "checked in" ? (
+                  <span className="flex justify-center items-center text-green-500">
+                    <CheckCircle className="mr-1" />
+                    {participant.status}
+                  </span>
+                ) : (
+                  <span className="flex justify-center items-center text-red-500">
+                    <UserX className="mr-1" />
+                    {participant.status}
+                  </span>
+                )}
+              </TableCell>
+              <TableCell className="text-center py-4 px-6">
+                <label className="flex justify-center items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={participant.status === "checked in"}
+                    onChange={(e) =>
+                      handleStatusChange(participant.id, e.target.checked)
+                    }
+                    className="h-4 w-4 rounded focus:ring-2 focus:ring-[hsl(var(--primary))] accent-[hsl(var(--primary))]"
+                  />
+                  <span>Checked In</span>
+                </label>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    ) : (
+      <p className="text-center text-gray-400">No participants yet</p>
+    )}
+  </div>
+</div>
+
+                
                 {/* Pagination Controls */}
                 <div className="flex justify-center items-center mt-6 space-x-4">
                   {/* Previous Button */}
@@ -399,10 +477,19 @@ const EventAnalytics: React.FC = () => {
                   >
                     <ChevronRight className="w-5 h-5" />
                   </Button>
+                  <button
+                    onClick={() => setShowScanner((prev) => !prev)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                  >
+                    {showScanner ? "Close QR Scanner" : "Scan QR to Check-in"}
+                  </button>
+                
                 </div>
               </div>
             </TabsContent>
           </div>
+
+          
           <TabsContent
             value="analytics"
             className="bg-[hsl(var(--background))] min-h-screen"

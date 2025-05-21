@@ -1,9 +1,7 @@
-import { atom, selector } from 'recoil';
+// store.ts
+import { create } from 'zustand';
 import { Event } from '@/types/type';
-export const activeTabState = atom<string>({
-  key: 'activeTabState',
-  default: 'all',
-});
+
 interface RegisteredParticipant {
   id: string;
   name: string;
@@ -11,7 +9,7 @@ interface RegisteredParticipant {
   status: string;
   department: string;
   ticketid: string;
-  registeredDate: string;  // New field
+  registeredDate: string;
 }
 
 interface EventRegistration {
@@ -19,9 +17,40 @@ interface EventRegistration {
   eventTitle: string;
   registeredParticipants: RegisteredParticipant[];
 }
-export const eventRegistrationState = atom<EventRegistration[]>({
-  key: 'eventRegistrationState',
-  default: [
+
+interface EventStore {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+
+  eventRegistrations: EventRegistration[];
+  setEventRegistrations: (data: EventRegistration[]) => void;
+
+  eventList: Event[];
+  setEventList: (data: Event[]) => void;
+
+  yearFilter: number;
+  setYearFilter: (year: number) => void;
+
+  selectedDate: string;
+  setSelectedDate: (date: string) => void;
+
+  eventFilter: string;
+  setEventFilter: (filter: string) => void;
+
+  eventCostFilter: string;
+  setEventCostFilter: (cost: string) => void;
+
+  eventDateFilter: string;
+  setEventDateFilter: (date: string) => void;
+
+  filteredEventList: () => Event[];
+}
+
+export const useEventStore = create<EventStore>((set, get) => ({
+  activeTab: 'all',
+  setActiveTab: (tab) => set({ activeTab: tab }),
+
+  eventRegistrations: [
     {
       eventId: '1',
       eventTitle: 'Event 1',
@@ -76,11 +105,10 @@ export const eventRegistrationState = atom<EventRegistration[]>({
       ],
     },
   ],
-});
 
-export const eventListState = atom<Event[]>({
-  key: 'eventListState',
-  default: [
+  setEventRegistrations: (data) => set({ eventRegistrations: data }),
+
+  eventList: [
     { id: '1', title: 'Event 1',  venue: 'Venue 1', cost: 'Free', start: '2024-01-18',  status: 'drafts' },
     { id: '2', title: 'Event 2',  venue: 'Venue 2', cost: 'Paid', start: '2024-09-19',  status: 'completed' },
     { id: '3', title: 'Event 3', venue: 'Venue 3', cost: 'Free', start: '2024-09-20',  status: 'ongoing' },
@@ -91,62 +119,52 @@ export const eventListState = atom<Event[]>({
     { id: '8', title: 'Event 8',  venue: 'Venue 8', cost: 'Free', start: '2024-09-2',  status: 'ongoing' },
     { id: '9', title: 'Event 9',  venue: 'Venue 9', cost: 'Paid', start: '2024-12-1',  status: 'upcoming' },
     { id: '10', title: 'Event 10', venue: 'Venue 10', cost: 'Free', start: '2024-09-22',  status: 'completed' },
-  ], 
-});
+  ],
+  setEventList: (data) => set({ eventList: data }),
 
+  yearFilter: new Date().getFullYear(),
+  setYearFilter: (year) => set({ yearFilter: year }),
 
-export const yearFilterState = atom<number>({
-  key: 'yearFilterState',
-  default: new Date().getFullYear(),
-});
-export const selectedDateState = atom<string>({
-  key: 'selectedDateState',
-  default: '', // Default date can be empty or a specific date string
-});
+  selectedDate: '',
+  setSelectedDate: (date) => set({ selectedDate: date }),
 
-export const eventFilterState = atom<string>({
-  key: 'eventFilterState',
-  default: '',
-});
-export const eventCostFilterState = atom<string>({
-  key: 'eventCostFilterState',
-  default: '',
-});
+  eventFilter: '',
+  setEventFilter: (filter) => set({ eventFilter: filter }),
 
-export const eventDateFilterState = atom<string>({
-  key: 'eventDateFilterState',
-  default: '',
-});
+  eventCostFilter: '',
+  setEventCostFilter: (cost) => set({ eventCostFilter: cost }),
 
-export const filteredEventListState = selector({
-  key: 'filteredEventListState',
-  get: ({ get }) => {
-    const filter = get(eventFilterState);
-    const eventList = get(eventListState);
-    const costFilter = get(eventCostFilterState);
-    const dateFilter = get(eventDateFilterState);
-    const activeTab = get(activeTabState); // Get the active tab state
+  eventDateFilter: '',
+  setEventDateFilter: (date) => set({ eventDateFilter: date }),
 
+  filteredEventList: () => {
+    const {
+      eventList,
+      eventFilter,
+      eventCostFilter,
+      eventDateFilter,
+      activeTab,
+    } = get();
+  
     const currentDate = new Date();
-
+  
     return eventList.filter((event) => {
-      const matchesTitle = event.title.toLowerCase().includes(filter.toLowerCase());
-      const matchesCost = !costFilter || event.cost === costFilter;
-
-      // Update the date filtering logic
+      const matchesTitle = event.title.toLowerCase().includes(eventFilter.toLowerCase());
+      const matchesCost = !eventCostFilter || event.cost === eventCostFilter;
+  
       const matchesDate =
-        !dateFilter ||
-        (dateFilter === 'past' && new Date(event.start) < currentDate) ||
-        (dateFilter === 'upcoming' && new Date(event.start) >= currentDate);
-
-      // Update the event status filtering logic
+        !eventDateFilter ||
+        (eventDateFilter === 'past' && new Date(event.start) < currentDate) ||
+        (eventDateFilter === 'upcoming' && new Date(event.start) >= currentDate);
+  
       const matchesStatus =
         activeTab === 'all' ||
         (activeTab === 'ongoing' && event.status === 'ongoing') ||
         (activeTab === 'completed' && event.status === 'completed') ||
         (activeTab === 'drafts' && event.status === 'drafts');
-
+  
       return matchesTitle && matchesCost && matchesDate && matchesStatus;
     });
-  },
-});
+  }  
+  
+}));

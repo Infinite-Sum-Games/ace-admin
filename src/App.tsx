@@ -1,8 +1,7 @@
 import { ThemeProvider } from '@/components/theme-provider'
 import './index.css'
-import { RecoilRoot } from 'recoil'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-
+import { RecoilRoot } from 'recoil'
 import DashboardPage from './pages/dashboard/DashboardPage'
 import Layout from '@/pages/Layout'
 import LoginPage from './pages/login/LoginPage'
@@ -22,8 +21,8 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-      <RecoilRoot>
-
+      
+<RecoilRoot>
         { /* Routing logic */}
         <BrowserRouter>
           <Routes>
@@ -43,7 +42,7 @@ function App() {
             <Route path="*" element={<Error404 />} />
           </Routes>
         </BrowserRouter>
-      </RecoilRoot>
+        </RecoilRoot>
     </ThemeProvider>
   )
 }

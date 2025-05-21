@@ -1,4 +1,5 @@
 import { EventmarkdownState } from "@/atoms/EventMarkDown";
+import { useMarkdownStore } from "@/stores/EventMarkdownStore";
 import {
   BlockTypeSelect,
   BoldItalicUnderlineToggles,
@@ -29,7 +30,9 @@ import "./EventMDXComponent.css"
 function MDXComponent() {
  
 
-  const [content,setContent] = useRecoilState(EventmarkdownState);
+  const content = useMarkdownStore((state) => state.markdown);
+const setContent = useMarkdownStore((state) => state.setMarkdown);
+
   return (
     <div>
       <MDXEditor

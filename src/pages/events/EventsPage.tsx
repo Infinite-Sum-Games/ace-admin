@@ -1,18 +1,16 @@
-import { useRecoilValue } from 'recoil';
-import { activeTabState } from '@/atoms/eventState';
+import { useEventStore } from '@/stores/EventStore';  // import your zustand store
 import { OngoingEvents, CompletedEvents, AllEvents, DraftEvents } from '@/components/EventComponents/OngoingEvents';
 import Sidebar from '@/components/Sidebar';
 
 const EventsPage = () => {
-  const activeTab = useRecoilValue(activeTabState);
+  const activeTab = useEventStore((state) => state.activeTab);  // Get the activeTab state from Zustand store
 
   return (
     <div className="min-h-screen flex bg-[hsl(var(--background))] text-[hsl(var(--foreground))] text-white">
-      <Sidebar /> {/* Placing Sidebar here on the left side */}
-      <div className="flex-1 flex flex-col p-8"> {/* Using flex-1 to take the remaining space */}
+      <Sidebar />
+      <div className="flex-1 flex flex-col p-8">
         <div className="text-center mb-3 sm:mb-4">
           <h1 className="text-3xl sm:text-6xl font-bold text-le text-left">Events</h1>
-
         </div>
 
         <div className="w-full h-full bg-[hsl(var(--background))] text-[hsl(var(--foreground))] rounded-lg shadow-xl p-4 sm:p-8">
