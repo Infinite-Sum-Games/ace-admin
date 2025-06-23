@@ -1,8 +1,7 @@
-import { campaignEditionByIdData } from "@/atoms/atoms";
 import { Status } from "@/components/NewsletterComponents/Columns";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useNewsletterStore } from "@/stores/newsletterStore";
 import {
   Tooltip,
   TooltipContent,
@@ -113,7 +112,9 @@ Welcome to this month's edition of our newsletter! We have some exciting updates
 
 const CampaignEditions = () => {
   const { id } = useParams<{ id: string }>();
-  const [campaignEdition, setcampaignEdition] = useRecoilState(campaignEditionByIdData);
+  const campaignEdition = useNewsletterStore((state) => state.campaignEditionByIdData);
+  const setcampaignEdition = useNewsletterStore((state) => state.setCampaignEditionByIdData);
+
   const [isPreviewDialogOpen, setIsPreviewDialogOpen] = useState(false);
   const [editionToPreview, setEditionToPreview] = useState<number | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -124,7 +125,7 @@ const CampaignEditions = () => {
     setcampaignEdition(tempData);
 
     // Implement API logic if needed
-  }, []);
+  }, [setcampaignEdition]);
   const campaignContent = campaignEdition?.campaignContent || [];
   const navigate = useNavigate();
   

@@ -26,13 +26,12 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { useRecoilState } from "recoil";
-import { newCampaignMarkdownState } from "@/atoms/atoms";
 import { marked } from "marked";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { useNewsletterStore } from "@/stores/newsletterStore";
 
 // Define allowed characters regex
-const allowedCharsRegex = /^[a-zA-Z0-9",:?([]{},!& ]*$/;
+const allowedCharsRegex = /^[a-zA-Z0-9",:?()[\]{}!&\s-]*$/;
 
 // Define campaign schema with Zod
 const campaignSchema = z.object({
@@ -78,7 +77,10 @@ export default function NewCampaign() {
 
   const [titleCount, setTitleCount] = useState("0/120");
   const [blurbCount, setBlurbCount] = useState("0/120");
-  const [content] = useRecoilState(newCampaignMarkdownState);
+  
+  const content = useNewsletterStore((state) => state.newCampaignMarkdownState);
+  const setContent = useNewsletterStore((state) => state.setNewCampaignMarkdownState);
+
   const rawhtml = marked(content);
 
   useEffect(() => {
@@ -205,10 +207,6 @@ export default function NewCampaign() {
                       control={form.control}
                       name="campaignContent.0.content"
                       render={({ field }) => {
-                        const [content, setContent] = useRecoilState(
-                          newCampaignMarkdownState
-                        );
-
                         return (
                           <FormItem>
                             <FormLabel>Content</FormLabel>

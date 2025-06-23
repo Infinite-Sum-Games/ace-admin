@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Form } from '@/components/ui/form';
-import { tempData } from './CampaignEditions';
 import { Status } from '@/components/NewsletterComponents/Columns';
 import MDXComponent from '@/components/NewsletterComponents/MDXComponent';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -15,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { marked } from 'marked';
+import { useNewsletterStore } from '@/stores/newsletterStore';
 
 export interface CampaignContent {
   id: number;
@@ -30,10 +30,21 @@ const EditCampaignContent = () => {
   const { contentID } = useParams<{ contentID: string }>() || { contentID: '' };
   const navigate = useNavigate();
 
-  const campaign = tempData;
-  const campaignContentToEdit = campaign.campaignContent.find((c) => c.id === parseInt(contentID || '0'));
+  const campaignData = useNewsletterStore((state) => state.campaignData);
+
+  let campaignContentToEdit: CampaignContent | undefined;
+  for (const campaign of campaignData) {
+    const found = campaign.campaignContent.find((c) => c.id === parseInt(contentID || '0'));
+    if (found) {
+      campaignContentToEdit = found as CampaignContent;
+      break;
+    }
+  }
+
   const [contentToEdit, setContentToEdit] = useState<string>(campaignContentToEdit?.content || "");
-  const [scheduledOn, setScheduledOn] = useState<Date | undefined>(campaignContentToEdit?.scheduledOn);
+  const [scheduledOn, setScheduledOn] = useState<Date | undefined>(
+    campaignContentToEdit?.scheduledOn ? new Date(campaignContentToEdit.scheduledOn) : undefined
+  );
 
   const form = useForm({
     defaultValues: {
@@ -54,7 +65,7 @@ const EditCampaignContent = () => {
   const rawhtml = marked(contentToEdit);
 
   return (
-<div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 flex justify-center items-center">
         <Card className="w-full max-w-5xl border-border border-2 rounded-lg">
@@ -80,13 +91,11 @@ const EditCampaignContent = () => {
                       control={form.control}
                       name="campaignContent.0.content"
                       render={({ field }) => {
-
                         return (
                           <FormItem>
                             <FormLabel>Content</FormLabel>
                             <FormControl>
-                              <MDXComponent content={contentToEdit} setContent={setContentToEdit}
-                              />
+                              <MDXComponent content={contentToEdit} setContent={setContentToEdit} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -150,7 +159,7 @@ const EditCampaignContent = () => {
 
                     <div className="flex space-x-2 col-span-2">
                       <Button variant={'secondary'} className='w-[50%]'>
-                      Discard Changes
+                        Discard Changes
                       </Button>
                       <Button type="submit" className='w-[50%]'>
                         <Send className="mr-2 h-4 w-4" /> Submit Campaign

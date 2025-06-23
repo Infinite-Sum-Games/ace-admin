@@ -3,15 +3,16 @@ import {
   columns,
 } from "../../components/NewsletterComponents/Columns";
 import { DataTable } from "../../components/NewsletterComponents/DataTable";
-import { campaignData } from "../../atoms/atoms";
-import { useRecoilValue } from "recoil";
 import Sidebar from "../../components/Sidebar";
+import { useNewsletterStore } from "@/stores/newsletterStore";
+
 const CampaignsPage: React.FC = () => {
   useEffect(() => {
     document.title = "ACE | Campaigns";
   }, []);
 
-  const data = useRecoilValue(campaignData);
+  const data = useNewsletterStore((state) => state.campaignData);
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
