@@ -1,4 +1,3 @@
-import { campaignData } from "@/atoms/atoms"
 import { ColumnDef } from "@tanstack/react-table"
 import {
   Edit,
@@ -7,7 +6,6 @@ import {
   ArrowUpDown,
   BookText,
 } from "lucide-react"
-import { useSetRecoilState } from "recoil"
 import { useState } from "react"
 import { Button } from "../ui/button"
 import { TableCell } from "../ui/table"
@@ -21,6 +19,7 @@ import {
 import EditDialog from "./EditCampaignDialog"
 import AlertDialogComponent from "./AlertDialogComponent"
 import { useNavigate } from "react-router-dom"
+import { useNewsletterStore } from "@/stores/newsletterStore"
 
 export enum Status {
   Draft = "Draft",
@@ -169,14 +168,15 @@ export const columns: ColumnDef<Newsletter>[] = [
     accessorKey: "actions",
     header: () => <div className="text-right pr-4">Actions</div>,
     cell: ({ row }) => {
-      const setData = useSetRecoilState(campaignData)
+      const setData = useNewsletterStore((state) => state.setCampaignData)
+      const campaignData = useNewsletterStore((state) => state.campaignData)
       const [isDialogOpen, setDialogOpen] = useState(false)
       const [selectedId, setSelectedId] = useState<string | null>(null)
       const [isEditDialogOpen, setEditDialogOpen] = useState(false)
 
       function handleDelete() {
-        setData((prevData: Newsletter[]) =>
-          prevData.filter((campaign) => campaign.id !== selectedId)
+        setData(
+          campaignData.filter((campaign) => campaign.id !== selectedId)
         )
         setDialogOpen(false)
       }
@@ -188,8 +188,8 @@ export const columns: ColumnDef<Newsletter>[] = [
 
       const handleSave = (updatedNewsletter: Newsletter) => {
         const updatedDate = new Date()
-        setData((prevData: Newsletter[]) =>
-          prevData.map((newsletter) =>
+        setData(
+          campaignData.map((newsletter) =>
             newsletter.id === selectedId
               ? { ...updatedNewsletter, updatedAt: updatedDate }
               : newsletter

@@ -5,8 +5,6 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import { useRecoilState } from "recoil";
-import { filterDashboardCardState } from "@/atoms/atoms";
 import ToggleGroup from "@/components/toggle-group";
 import {
   User,
@@ -20,6 +18,7 @@ import EventsTable from "@/components/RecentEventsTable";
 import { Separator } from "@/components/ui/separator";
 import { Overview } from "@/components/DashboardBarChart";
 import Sidebar from "@/components/Sidebar";
+import { useNewsletterStore } from "@/stores/newsletterStore";
 
 interface Metric {
   thisYear: number;
@@ -28,7 +27,8 @@ interface Metric {
 }
 
 const Dashboard: React.FC = () => {
-  const [filter, setFilter] = useRecoilState(filterDashboardCardState);
+  const filter = useNewsletterStore((state) => state.filterDashboardCardState);
+  const setFilter = useNewsletterStore((state) => state.setFilterDashboardCardState);
 
   const data = {
     activeMembers: {
